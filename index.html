@@ -1,1 +1,4619 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>通信原理期末综合练习</title>
+  <style>
+:root {
+  color-scheme: light;
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --text: #17202a;
+  --muted: #687386;
+  --line: #d9dee7;
+  --primary: #0f766e;
+  --primary-dark: #0b5d57;
+  --danger: #b42318;
+  --danger-dark: #8f1d14;
+  --focus: #2563eb;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
 
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 0;
+}
+
+body {
+  min-width: 0;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+button,
+textarea,
+input {
+  font: inherit;
+}
+
+button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  background: var(--primary);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--primary-dark);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+button:focus-visible,
+textarea:focus-visible,
+input:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--focus) 30%, transparent);
+  outline-offset: 2px;
+}
+
+button.secondary {
+  background: #344054;
+}
+
+button.secondary:hover {
+  background: #1f2937;
+}
+
+button.danger {
+  background: var(--danger);
+}
+
+button.danger:hover {
+  background: var(--danger-dark);
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.8rem 1rem 0.45rem;
+}
+
+.brand__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.brand__sub {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.top-nav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.35rem;
+  padding: 0 0.75rem 0.75rem;
+}
+
+.top-nav button {
+  min-width: 0;
+  min-height: 40px;
+  padding: 0.55rem 0.35rem;
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: var(--text);
+  font-size: 0.88rem;
+}
+
+.top-nav button[aria-current="page"] {
+  border-color: var(--primary);
+  background: #e6f4f1;
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+.app-main {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.view {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 1rem;
+  min-width: 0;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0.5rem;
+  font-size: 1.45rem;
+  line-height: 1.25;
+}
+
+h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+p {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.action-row,
+.action-grid {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.mode-grid,
+.config-grid,
+.question-actions {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.config-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.field-label {
+  display: grid;
+  gap: 0.4rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.field-label--wide {
+  margin-top: 1rem;
+}
+
+.field-input,
+.answer-textarea,
+.json-textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.7rem;
+  color: var(--text);
+  background: #fbfcfe;
+  line-height: 1.45;
+}
+
+.answer-textarea,
+.json-textarea {
+  resize: vertical;
+}
+
+.practice-head {
+  background: #f8fbfb;
+}
+
+.question-card {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.question-card.is-submitted {
+  border-color: #b9d8d2;
+}
+
+.question-title-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.7rem;
+  align-items: start;
+}
+
+.question-title {
+  min-width: 0;
+}
+
+.question-title p {
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.star-button {
+  width: 2rem;
+  min-width: 2rem;
+  min-height: 2rem;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: #98a2b3;
+  line-height: 1;
+}
+
+.star-button:hover {
+  background: #fff7df;
+  color: #9a6700;
+}
+
+.star-button.is-active {
+  border-color: #f5b544;
+  background: #fff2c7;
+  color: #9a6700;
+}
+
+.answer-area {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.option-item {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  gap: 0.55rem;
+  align-items: start;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.75rem;
+  background: #fbfcfe;
+  color: var(--text);
+}
+
+.option-item input {
+  margin-top: 0.2rem;
+}
+
+.option-key {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.55rem;
+  min-height: 1.55rem;
+  border-radius: 999px;
+  background: #eef2f6;
+  color: #344054;
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+.option-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.option-item.correct {
+  border-color: #15803d;
+  background: #ecfdf3;
+}
+
+.option-item.correct .option-key {
+  background: #15803d;
+  color: #ffffff;
+}
+
+.option-item.wrong {
+  border-color: #b42318;
+  background: #fff1f0;
+}
+
+.option-item.wrong .option-key {
+  background: #b42318;
+  color: #ffffff;
+}
+
+.option-item.locked {
+  cursor: default;
+}
+
+.feedback {
+  border-radius: 8px;
+  padding: 0.85rem;
+  border: 1px solid var(--line);
+  background: #f8fafc;
+}
+
+.feedback.good {
+  border-color: #15803d;
+  background: #ecfdf3;
+}
+
+.feedback.bad {
+  border-color: #b42318;
+  background: #fff1f0;
+}
+
+.feedback p {
+  margin-bottom: 0.45rem;
+}
+
+.answer-line {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.explanation {
+  color: var(--text);
+}
+
+.paper-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  box-shadow: 0 -8px 18px rgba(16, 24, 40, 0.06);
+}
+
+.waveform-placeholder {
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  padding: 0.8rem;
+  color: var(--muted);
+  background: #fbfcfe;
+}
+
+.json-box {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.json-box textarea {
+  width: 100%;
+  min-width: 0;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: var(--text);
+  background: #fbfcfe;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (min-width: 640px) {
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .brand {
+    padding: 0.9rem 0;
+  }
+
+  .top-nav {
+    display: flex;
+    padding: 0;
+  }
+
+  .top-nav button {
+    padding-inline: 0.9rem;
+  }
+
+  .app-main {
+    padding: 1.5rem;
+  }
+
+  .action-row,
+  .action-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .mode-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .config-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .question-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-main {
+    width: min(100%, 1040px);
+    padding-inline: 2rem;
+  }
+
+  .panel {
+    padding: 1.15rem;
+  }
+}
+
+</style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand__title">通信原理练习</span>
+      <span class="brand__sub">离线版</span>
+    </div>
+    <nav class="top-nav" aria-label="主导航">
+      <button type="button" data-view-link="home" aria-current="page">首页</button>
+      <button type="button" data-view-link="practice">做题</button>
+      <button type="button" data-view-link="result">结果</button>
+      <button type="button" data-view-link="mistake">错题与不熟题</button>
+      <button type="button" data-view-link="review">考前速背</button>
+    </nav>
+  </header>
+
+  <main class="app-main">
+    <section id="view-home" class="view" data-view="home">
+      <div class="panel">
+        <h1>期末综合练习</h1>
+        <p>当前完成任务 A：页面骨架、离线加载顺序、状态持久化与延迟提交状态机。</p>
+        <div class="action-row">
+          <button type="button" data-route="practice">开始做题</button>
+          <button type="button" data-route="review" class="secondary">考前速背</button>
+        </div>
+      </div>
+
+      <section class="panel state-panel" aria-labelledby="state-tools-title">
+        <h2 id="state-tools-title">状态工具</h2>
+        <p id="storage-status" class="muted">正在读取本地状态...</p>
+        <div class="action-grid">
+          <button type="button" id="export-state">导出 JSON</button>
+          <button type="button" id="import-state" class="secondary">导入 JSON</button>
+          <button type="button" id="reset-state" class="danger">重置状态</button>
+        </div>
+        <label class="json-box">
+          <span>JSON</span>
+          <textarea id="state-json" spellcheck="false" rows="8"></textarea>
+        </label>
+      </section>
+    </section>
+
+    <section id="view-practice" class="view" data-view="practice" hidden>
+      <div class="panel">
+        <h1>做题</h1>
+        <p>任务 A 不包含题库、抽题算法或判分逻辑。后续任务会在这里挂载试卷界面。</p>
+      </div>
+    </section>
+
+    <section id="view-result" class="view" data-view="result" hidden>
+      <div class="panel">
+        <h1>结果</h1>
+        <p id="pending-status">暂无待提交结果。</p>
+        <div class="action-grid">
+          <button type="button" id="commit-pending">加入错题库，进入下一套</button>
+          <button type="button" id="redo-pending" class="secondary">重做错题/不熟题</button>
+          <button type="button" id="discard-pending" class="danger">重新生成一套，不保存本次记录</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-mistake" class="view" data-view="mistake" hidden>
+      <div class="panel">
+        <h1>错题与不熟题</h1>
+        <p>历史错题与不熟题练习区将在此渲染。</p>
+      </div>
+    </section>
+
+    <section id="view-review" class="view" data-view="review" hidden>
+      <div class="panel">
+        <h1>考前速背</h1>
+        <p>任务 A 只预留视图容器。速背内容会在后续任务接入。</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+/*
+ * 职责：题库层；固化课程作业原题与同知识点衍生题。
+ * 状态读写：不读取、不写入 State/localStorage；只挂载 window.CP.tags 与 window.CP.questions。
+ */
+window.CP = window.CP || {};
+
+window.CP.tags = {
+  comm_basics: "通信系统基础概念",
+  info_unit: "信息量单位",
+  info_amount: "信息量计算",
+  baud_rate: "码元速率",
+  info_rate: "信息速率",
+  mary_bits: "多进制码元比特数",
+  ber_ser: "误码率与误信率",
+  energy_power_signal: "能量信号与功率信号",
+  gaussian_linear: "高斯过程与线性系统",
+  wss: "广义平稳随机过程",
+  autocorr_r0_rinf: "自相关函数特征值",
+  channel_const_random: "恒参信道与随参信道",
+  additive_multiplicative: "加性干扰与乘性干扰",
+  shannon: "香农容量公式",
+  db_linear: "dB与线性信噪比",
+  bw_infinite_capacity: "无限带宽容量极限",
+  am_dsb_ssb_fdm: "AM/DSB/SSB/FDM",
+  ma_index: "调幅系数",
+  fm_beta: "调频指数",
+  carson: "卡森公式",
+  direct_fm: "直接调频法",
+  fm_pm_trap: "FM/PM判别陷阱",
+  line_codes: "数字基带码型",
+  isi: "码间串扰",
+  baseband_spectrum: "基带功率谱",
+  optimal_threshold: "最佳判决门限",
+  psk_anti_noise: "2PSK抗噪性能",
+  ask_threshold_sensitive: "2ASK门限敏感性",
+  fsk_spectral_eff: "2FSK频带利用率",
+  hdb3_rule: "HDB3编码规则",
+  ook_fsk_psk_waveform: "OOK/2FSK/2PSK波形"
+};
+
+window.CP.questions = [
+  {
+    id: "CP-S-001",
+    type: "single",
+    question: "已知二进制2分钟内共传送了72000个码元，码元速率是（ ），如果码元脉冲保持不变，改为八进制数字信号，码元速率是（ ）。",
+    options: [
+      { key: "A", text: "72000 Baud，28000 Baud" },
+      { key: "B", text: "36000 Baud，12000 Baud" },
+      { key: "C", text: "36000 Baud，36000 Baud" },
+      { key: "D", text: "600 Baud，600 Baud" }
+    ],
+    answer: "D",
+    explanation: "码元速率 RB=码元数/时间=72000/(2×60)=600 Baud。码元脉冲保持不变时码元持续时间不变，所以改为八进制后码元速率仍为600 Baud。",
+    knowledgeTag: "baud_rate",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-S-002",
+    type: "single",
+    question: "已知二进制2分钟内共传送了72000个码元，信息速率是（ ），如果码元脉冲保持不变，改为八进制数字信号，信息速率是（ ）。",
+    options: [
+      { key: "A", text: "600 bit/s，600 bit/s" },
+      { key: "B", text: "600 bit/s，1800 bit/s" },
+      { key: "C", text: "1800 bit/s，600 bit/s" },
+      { key: "D", text: "1800 bit/s，1800 bit/s" }
+    ],
+    answer: "B",
+    explanation: "二进制每码元携带log2(2)=1 bit，Rb=600 bit/s；八进制每码元携带log2(8)=3 bit，Rb=600×3=1800 bit/s。",
+    knowledgeTag: "info_rate",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-S-003",
+    type: "single",
+    question: "已知一个十六进制的数字传输系统，若其码元速率为2000 Baud，则该系统最大可能的信息速率为（ ）。",
+    options: [
+      { key: "A", text: "2000 bit/s" },
+      { key: "B", text: "4000 bit/s" },
+      { key: "C", text: "1000 bit/s" },
+      { key: "D", text: "8000 bit/s" }
+    ],
+    answer: "D",
+    explanation: "十六进制M=16，每码元携带log2(16)=4 bit，所以信息速率Rb=2000×4=8000 bit/s。",
+    knowledgeTag: "mary_bits",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-S-004",
+    type: "single",
+    question: "在信道上传输的是（ ）的通信系统称为模拟通信系统。",
+    options: [
+      { key: "A", text: "以上均不对" },
+      { key: "B", text: "数字信号" },
+      { key: "C", text: "任何信号" },
+      { key: "D", text: "模拟信号" }
+    ],
+    answer: "D",
+    explanation: "模拟通信系统在信道上传输模拟信号；数字通信系统在信道上传输数字信号。",
+    knowledgeTag: "comm_basics",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-S-005",
+    type: "single",
+    question: "通信双方都能收发消息，但不能同时收发的工作方式属于（ ）。",
+    options: [
+      { key: "A", text: "半双工通信" },
+      { key: "B", text: "单工通信" },
+      { key: "C", text: "双工通信" }
+    ],
+    answer: "A",
+    explanation: "半双工通信允许双方都能发送和接收，但同一时刻只能单向传输。",
+    knowledgeTag: "comm_basics",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-S-006",
+    type: "single",
+    question: "衡量数字通信系统传输质量的指标是（ ）。",
+    options: [
+      { key: "A", text: "信噪比" },
+      { key: "B", text: "噪声功率" },
+      { key: "C", text: "误码率" },
+      { key: "D", text: "话音清晰度" }
+    ],
+    answer: "C",
+    explanation: "数字通信系统可靠性的常用质量指标是误码率。",
+    knowledgeTag: "ber_ser",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-S-007",
+    type: "single",
+    question: "设平稳随机过程X(t)的自相关函数为R(τ)，则R(0)表示X(t)的（ ）。",
+    options: [
+      { key: "A", text: "直流功率" },
+      { key: "B", text: "总能量" },
+      { key: "C", text: "平均功率" },
+      { key: "D", text: "方差" }
+    ],
+    answer: "C",
+    explanation: "平稳随机过程的R(0)=E[X²(t)]，表示平均功率。",
+    knowledgeTag: "autocorr_r0_rinf",
+    difficulty: 1,
+    sourceGroup: "作业2"
+  },
+  {
+    id: "CP-S-008",
+    type: "single",
+    question: "设平稳随机过程X(t)的自相关函数为R(τ)，当τ趋于无穷时R(τ)表示X(t)的（ ）。",
+    options: [
+      { key: "A", text: "平均功率" },
+      { key: "B", text: "方差" },
+      { key: "C", text: "直流功率" },
+      { key: "D", text: "总能量" }
+    ],
+    answer: "C",
+    explanation: "R(∞)等于均值平方，反映随机过程的直流功率。",
+    knowledgeTag: "autocorr_r0_rinf",
+    difficulty: 1,
+    sourceGroup: "作业2"
+  },
+  {
+    id: "CP-S-009",
+    type: "single",
+    question: "以下属于无线信道的是（ ）。",
+    options: [
+      { key: "A", text: "电磁波" },
+      { key: "B", text: "双绞线" },
+      { key: "C", text: "电缆" },
+      { key: "D", text: "光纤" }
+    ],
+    answer: "A",
+    explanation: "电磁波传播属于无线传输媒介；双绞线、电缆、光纤属于有线媒介。",
+    knowledgeTag: "channel_const_random",
+    difficulty: 1,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-S-010",
+    type: "single",
+    question: "设一数字传输系统传送8进制码元，码元传输速率为1200 Baud，此时该系统的信息传输速率为（ ）。",
+    options: [
+      { key: "A", text: "1200 bit/s" },
+      { key: "B", text: "3600 bit/s" },
+      { key: "C", text: "4800 bit/s" },
+      { key: "D", text: "2400 bit/s" }
+    ],
+    answer: "B",
+    explanation: "8进制每码元携带3 bit，因此Rb=1200×3=3600 bit/s。",
+    knowledgeTag: "info_rate",
+    difficulty: 1,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-S-011",
+    type: "single",
+    question: "根据香农公式可知，为了使信道容量趋于无穷大，不可以采取下列哪项措施？",
+    options: [
+      { key: "A", text: "噪声功率谱密度始终为零" },
+      { key: "B", text: "系统带宽为无穷大" },
+      { key: "C", text: "噪声功率为零" },
+      { key: "D", text: "信号发射功率为无穷大" }
+    ],
+    answer: "B",
+    explanation: "C=B log2(1+S/N)。在噪声功率随带宽增加的通常模型下，单纯令B趋于无穷并不会使容量趋于无穷。",
+    knowledgeTag: "bw_infinite_capacity",
+    difficulty: 2,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-S-012",
+    type: "single",
+    question: "在抗加性高斯白噪声方面，性能最好的是（ ）。",
+    options: [
+      { key: "A", text: "相干2PSK" },
+      { key: "B", text: "相干2ASK" },
+      { key: "C", text: "相干2DPSK" },
+      { key: "D", text: "相干2FSK" }
+    ],
+    answer: "A",
+    explanation: "在相干二进制数字调制中，相干2PSK的抗加性高斯白噪声性能最好。",
+    knowledgeTag: "psk_anti_noise",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-S-013",
+    type: "single",
+    question: "下列哪种解调方式对判决门限敏感？",
+    options: [
+      { key: "A", text: "相干2ASK" },
+      { key: "B", text: "相干2PSK" },
+      { key: "C", text: "差分相干解调" },
+      { key: "D", text: "相干2FSK" }
+    ],
+    answer: "A",
+    explanation: "2ASK以幅度判决为主，门限偏移会直接影响判决结果，因此对门限敏感。",
+    knowledgeTag: "ask_threshold_sensitive",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-S-014",
+    type: "single",
+    question: "若信号的幅度为1，双极性归零码的最佳判决门限为（ ）。",
+    options: [
+      { key: "A", text: "1" },
+      { key: "B", text: "0" },
+      { key: "C", text: "与信道特性有关" },
+      { key: "D", text: "0.5" }
+    ],
+    answer: "B",
+    explanation: "等概双极性信号电平关于0对称，最佳判决门限为0。",
+    knowledgeTag: "optimal_threshold",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-S-015",
+    type: "single",
+    question: "下列二进制数字调制系统频带利用率最低的是（ ）。",
+    options: [
+      { key: "A", text: "2PSK" },
+      { key: "B", text: "2FSK" },
+      { key: "C", text: "2ASK" },
+      { key: "D", text: "2DPSK" }
+    ],
+    answer: "B",
+    explanation: "2FSK需要用两个不同载频表示二进制符号，频带利用率通常最低。",
+    knowledgeTag: "fsk_spectral_eff",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-S-016",
+    type: "single",
+    question: "2DPSK、2ASK、2PSK和2FSK采用相干解调时，抗加性高斯白噪声性能最差的是（ ）。",
+    options: [
+      { key: "A", text: "2ASK" },
+      { key: "B", text: "2FSK" },
+      { key: "C", text: "2DPSK" },
+      { key: "D", text: "2PSK" }
+    ],
+    answer: "A",
+    explanation: "相干2ASK最易受幅度噪声和门限设置影响，抗噪性能最差。",
+    knowledgeTag: "ask_threshold_sensitive",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-S-017",
+    type: "single",
+    question: "已知每个码元持续时间Ts=0.5 ms，则码元速率RB为（ ）。",
+    options: [
+      { key: "A", text: "500 Baud" },
+      { key: "B", text: "1000 Baud" },
+      { key: "C", text: "2000 Baud" },
+      { key: "D", text: "4000 Baud" }
+    ],
+    answer: "C",
+    explanation: "RB=1/Ts=1/(0.5×10^-3)=2000 Baud。",
+    knowledgeTag: "baud_rate",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-018",
+    type: "single",
+    question: "在M进制数字传输中，每个码元最多携带的信息量为（ ）。",
+    options: [
+      { key: "A", text: "M bit" },
+      { key: "B", text: "log2(M) bit" },
+      { key: "C", text: "2M bit" },
+      { key: "D", text: "1/M bit" }
+    ],
+    answer: "B",
+    explanation: "M个等概符号每个码元可表示log2(M) bit信息。",
+    knowledgeTag: "mary_bits",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-019",
+    type: "single",
+    question: "若四进制码元速率为2400 Baud，则信息速率为（ ）。",
+    options: [
+      { key: "A", text: "1200 bit/s" },
+      { key: "B", text: "2400 bit/s" },
+      { key: "C", text: "4800 bit/s" },
+      { key: "D", text: "9600 bit/s" }
+    ],
+    answer: "C",
+    explanation: "四进制每码元2 bit，Rb=2400×2=4800 bit/s。",
+    knowledgeTag: "info_rate",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-020",
+    type: "single",
+    question: "概率为1/8的离散消息所含信息量为（ ）。",
+    options: [
+      { key: "A", text: "1 bit" },
+      { key: "B", text: "2 bit" },
+      { key: "C", text: "3 bit" },
+      { key: "D", text: "8 bit" }
+    ],
+    answer: "C",
+    explanation: "I=-log2(P)=-log2(1/8)=3 bit。",
+    knowledgeTag: "info_amount",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-021",
+    type: "single",
+    question: "下列哪一项不是信息量的单位？",
+    options: [
+      { key: "A", text: "bit" },
+      { key: "B", text: "Hartley" },
+      { key: "C", text: "nat" },
+      { key: "D", text: "Baud" }
+    ],
+    answer: "D",
+    explanation: "bit、Hartley、nat都是信息量单位；Baud是码元速率单位。",
+    knowledgeTag: "info_unit",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-022",
+    type: "single",
+    question: "香农公式C=B log2(1+S/N)中，S/N必须使用（ ）。",
+    options: [
+      { key: "A", text: "dB值" },
+      { key: "B", text: "线性功率比" },
+      { key: "C", text: "百分数" },
+      { key: "D", text: "波特" }
+    ],
+    answer: "B",
+    explanation: "代入香农公式时，S/N应先由dB值换算成线性功率比。",
+    knowledgeTag: "db_linear",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-023",
+    type: "single",
+    question: "若信噪比为20 dB，其对应的线性信噪比为（ ）。",
+    options: [
+      { key: "A", text: "2" },
+      { key: "B", text: "10" },
+      { key: "C", text: "100" },
+      { key: "D", text: "1000" }
+    ],
+    answer: "C",
+    explanation: "S/N(dB)=10log10(S/N)，20 dB对应S/N=10^(20/10)=100。",
+    knowledgeTag: "db_linear",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-024",
+    type: "single",
+    question: "AM波包络最大值为12 V、最小值为4 V，则调幅系数ma为（ ）。",
+    options: [
+      { key: "A", text: "0.25" },
+      { key: "B", text: "0.50" },
+      { key: "C", text: "0.67" },
+      { key: "D", text: "2.00" }
+    ],
+    answer: "B",
+    explanation: "ma=(Vmax-Vmin)/(Vmax+Vmin)=(12-4)/(12+4)=0.50。",
+    knowledgeTag: "ma_index",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-025",
+    type: "single",
+    question: "某FM信号最大频偏Δf=15 kHz，调制信号频率fm=3 kHz，则调频指数β为（ ）。",
+    options: [
+      { key: "A", text: "3" },
+      { key: "B", text: "5" },
+      { key: "C", text: "12" },
+      { key: "D", text: "18" }
+    ],
+    answer: "B",
+    explanation: "β=Δf/fm=15/3=5。",
+    knowledgeTag: "fm_beta",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-026",
+    type: "single",
+    question: "按卡森公式，Δf=20 kHz、fm=5 kHz的FM信号近似带宽为（ ）。",
+    options: [
+      { key: "A", text: "25 kHz" },
+      { key: "B", text: "40 kHz" },
+      { key: "C", text: "50 kHz" },
+      { key: "D", text: "100 kHz" }
+    ],
+    answer: "C",
+    explanation: "卡森公式B≈2(Δf+fm)=2×(20+5)=50 kHz。",
+    knowledgeTag: "carson",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-027",
+    type: "single",
+    question: "普通AM信号中，真正承载调制信息的是（ ）。",
+    options: [
+      { key: "A", text: "载波本身" },
+      { key: "B", text: "上、下边带" },
+      { key: "C", text: "直流分量" },
+      { key: "D", text: "噪声分量" }
+    ],
+    answer: "B",
+    explanation: "AM调制后的调制信息位于上下边带；载波本身不携带有用调制信息。",
+    knowledgeTag: "am_dsb_ssb_fdm",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-028",
+    type: "single",
+    question: "双极性基带信号在等概条件下的最佳判决门限通常取（ ）。",
+    options: [
+      { key: "A", text: "0" },
+      { key: "B", text: "正电平" },
+      { key: "C", text: "负电平" },
+      { key: "D", text: "最大幅度的一半" }
+    ],
+    answer: "A",
+    explanation: "双极性信号的两个判决电平关于0对称，等概时最佳门限为0。",
+    knowledgeTag: "optimal_threshold",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-029",
+    type: "single",
+    question: "HDB3码是在AMI码基础上为解决长连0问题而引入（ ）。",
+    options: [
+      { key: "A", text: "违代码和取代节" },
+      { key: "B", text: "载波同步" },
+      { key: "C", text: "频分复用" },
+      { key: "D", text: "门限检波" }
+    ],
+    answer: "A",
+    explanation: "HDB3通过000V或B00V等取代节破坏长串0，从而增加定时信息。",
+    knowledgeTag: "hdb3_rule",
+    difficulty: 2,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-030",
+    type: "single",
+    question: "OOK信号中，二进制符号主要由载波的（ ）来区分。",
+    options: [
+      { key: "A", text: "有无" },
+      { key: "B", text: "频率正负" },
+      { key: "C", text: "相位连续变化" },
+      { key: "D", text: "码元速率翻倍" }
+    ],
+    answer: "A",
+    explanation: "OOK是开关键控，通常用有载波表示1、无载波表示0。",
+    knowledgeTag: "ook_fsk_psk_waveform",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-031",
+    type: "single",
+    question: "在相干二进制数字调制中，利用两个反相信号、欧氏距离较大，因此抗加性高斯白噪声性能较好的是（ ）。",
+    options: [
+      { key: "A", text: "相干2PSK" },
+      { key: "B", text: "相干2ASK" },
+      { key: "C", text: "相干2FSK" },
+      { key: "D", text: "OOK" }
+    ],
+    answer: "A",
+    explanation: "相干2PSK用相位相反的两个载波表示二进制符号，信号距离较大，在同类相干二进制调制中抗加性高斯白噪声性能较好。",
+    knowledgeTag: "psk_anti_noise",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-S-032",
+    type: "single",
+    question: "2FSK频带利用率较低的主要原因是（ ）。",
+    options: [
+      { key: "A", text: "需要用两个不同载频分别表示0和1，占用频带较宽" },
+      { key: "B", text: "只能传输模拟信号" },
+      { key: "C", text: "不需要载波" },
+      { key: "D", text: "判决门限必须固定为0" }
+    ],
+    answer: "A",
+    explanation: "2FSK用两个不同频率承载二进制符号，频谱占用通常宽于2ASK、2PSK，因此频带利用率较低。",
+    knowledgeTag: "fsk_spectral_eff",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-M-001",
+    type: "multiple",
+    question: "信息量的单位包括（ ）。",
+    options: [
+      { key: "A", text: "哈特莱" },
+      { key: "B", text: "奈特" },
+      { key: "C", text: "比特" },
+      { key: "D", text: "波特" }
+    ],
+    answer: ["A", "B", "C"],
+    explanation: "Hartley、nat、bit均可作信息量单位；Baud是码元速率单位。",
+    knowledgeTag: "info_unit",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-M-002",
+    type: "multiple",
+    question: "信源编码与译码的目的包括（ ）。",
+    options: [
+      { key: "A", text: "增强抗干扰能力" },
+      { key: "B", text: "保证所传信息的安全" },
+      { key: "C", text: "提高信息传输的有效性" },
+      { key: "D", text: "完成模/数转换" }
+    ],
+    answer: ["C", "D"],
+    explanation: "按本课程作业口径，信源编码与译码用于提高有效性并完成模/数转换相关处理。",
+    knowledgeTag: "comm_basics",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-M-003",
+    type: "multiple",
+    question: "以下说法正确的是（ ）。",
+    options: [
+      { key: "A", text: "周期性功率信号的互相关函数和其互功率谱构成一对傅里叶变换" },
+      { key: "B", text: "一个信号可以既不是能量信号，也不是功率信号" },
+      { key: "C", text: "高斯过程经过线性系统后就可能不是高斯过程" },
+      { key: "D", text: "两个连续的周期信号相加一定也是周期的" }
+    ],
+    answer: ["A", "B"],
+    explanation: "A、B为本课程作业正确项；高斯过程通过线性系统仍为高斯过程，两个周期信号相加不一定仍周期。",
+    knowledgeTag: "energy_power_signal",
+    difficulty: 2,
+    sourceGroup: "作业2"
+  },
+  {
+    id: "CP-M-004",
+    type: "multiple",
+    question: "（ ）系统的信道属于无线信道。",
+    options: [
+      { key: "A", text: "光纤通信" },
+      { key: "B", text: "WIFI" },
+      { key: "C", text: "卫星通信" },
+      { key: "D", text: "LIFI" }
+    ],
+    answer: ["B", "C", "D"],
+    explanation: "WIFI、卫星通信、LIFI均不依赖实体导线传输；光纤通信属于有线信道。",
+    knowledgeTag: "channel_const_random",
+    difficulty: 1,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-M-005",
+    type: "multiple",
+    question: "信道容量的单位包括（ ）。",
+    options: [
+      { key: "A", text: "波特" },
+      { key: "B", text: "比特/秒" },
+      { key: "C", text: "赫兹" },
+      { key: "D", text: "比特/符号" }
+    ],
+    answer: ["B", "D"],
+    explanation: "信道容量可用信息传输速率单位bit/s，也可按每符号信息量表示；Baud和Hz不是容量单位。",
+    knowledgeTag: "shannon",
+    difficulty: 1,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-M-006",
+    type: "multiple",
+    question: "以下系统的信道属于随参信道的有（ ）。",
+    options: [
+      { key: "A", text: "地波" },
+      { key: "B", text: "光纤通信" },
+      { key: "C", text: "天波" },
+      { key: "D", text: "电离层散射" }
+    ],
+    answer: ["A", "C", "D"],
+    explanation: "按课程作业口径，地波、天波和电离层散射属于随参信道；光纤通信属于恒参信道。",
+    knowledgeTag: "channel_const_random",
+    difficulty: 2,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-M-007",
+    type: "multiple",
+    question: "恒参信道的失真包括哪些？",
+    options: [
+      { key: "A", text: "非线性失真" },
+      { key: "B", text: "频率失真" },
+      { key: "C", text: "相位失真" },
+      { key: "D", text: "多径效应" }
+    ],
+    answer: ["A", "B", "C"],
+    explanation: "恒参信道主要失真包括非线性失真、频率失真和相位失真；多径效应通常归入随参信道特征。",
+    knowledgeTag: "channel_const_random",
+    difficulty: 2,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-M-008",
+    type: "multiple",
+    question: "下列哪些属于调制信道模型中的乘性干扰特点？",
+    options: [
+      { key: "A", text: "随信道变化" },
+      { key: "B", text: "始终存在" },
+      { key: "C", text: "无信号时消失" },
+      { key: "D", text: "与信号相乘" }
+    ],
+    answer: ["A", "C", "D"],
+    explanation: "乘性干扰与信号相乘并随信道变化；无信号时乘性干扰项随之消失。",
+    knowledgeTag: "additive_multiplicative",
+    difficulty: 1,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-M-009",
+    type: "multiple",
+    question: "普通调幅波的说法正确的是（ ）。",
+    options: [
+      { key: "A", text: "设备简单" },
+      { key: "B", text: "与其他调制方式比较占用的频带窄" },
+      { key: "C", text: "解调方便，便于接收" },
+      { key: "D", text: "功率利用率太低，整机利用率低" }
+    ],
+    answer: ["A", "C", "D"],
+    explanation: "普通AM设备简单、解调方便，但功率利用率低；它并不比SSB等方式更省带宽。",
+    knowledgeTag: "am_dsb_ssb_fdm",
+    difficulty: 1,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-M-010",
+    type: "multiple",
+    question: "调频信号（FM）的带宽与哪些因素有关？",
+    options: [
+      { key: "A", text: "调制信号频率" },
+      { key: "B", text: "调频指数" },
+      { key: "C", text: "载波频率" },
+      { key: "D", text: "调制信号幅度" }
+    ],
+    answer: ["A", "B", "D"],
+    explanation: "FM带宽与调制频率、最大频偏和调频指数有关；调制信号幅度会影响频偏，载波频率本身不决定带宽。",
+    knowledgeTag: "fm_beta",
+    difficulty: 1,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-M-011",
+    type: "multiple",
+    question: "直接调频法的说法正确的是（ ）。",
+    options: [
+      { key: "A", text: "载频会发生漂移" },
+      { key: "B", text: "不可以获得较大的频偏" },
+      { key: "C", text: "频率稳定度不高" },
+      { key: "D", text: "可以获得较大的频偏" }
+    ],
+    answer: ["A", "C", "D"],
+    explanation: "直接调频法易获得较大频偏，但载频会漂移，频率稳定度不高。",
+    knowledgeTag: "direct_fm",
+    difficulty: 1,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-M-012",
+    type: "multiple",
+    question: "调制的目的有（ ）。",
+    options: [
+      { key: "A", text: "提高无线通信时的天线辐射效率" },
+      { key: "B", text: "把多个基带信号搬移到不同载频处以实现信道复用" },
+      { key: "C", text: "扩展信号带宽，提高抗干扰、抗衰落能力" },
+      { key: "D", text: "增大输出功率" }
+    ],
+    answer: ["A", "B", "C"],
+    explanation: "调制可提高天线效率、实现频分复用，并可通过扩展带宽改善抗干扰能力；增大输出功率不是调制本身目的。",
+    knowledgeTag: "am_dsb_ssb_fdm",
+    difficulty: 1,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-M-013",
+    type: "multiple",
+    question: "DSB信号的组成部分包括（ ）。",
+    options: [
+      { key: "A", text: "正交分量" },
+      { key: "B", text: "上边带" },
+      { key: "C", text: "载波分量" },
+      { key: "D", text: "下边带" }
+    ],
+    answer: ["B", "D"],
+    explanation: "DSB-SC双边带抑制载波信号由上边带和下边带组成，不含独立载波分量。",
+    knowledgeTag: "am_dsb_ssb_fdm",
+    difficulty: 1,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-M-014",
+    type: "multiple",
+    question: "单边带调制（SSB）的优点包括（ ）。",
+    options: [
+      { key: "A", text: "节省功率" },
+      { key: "B", text: "设备简单" },
+      { key: "C", text: "抗干扰能力强" },
+      { key: "D", text: "节省带宽" }
+    ],
+    answer: ["A", "C", "D"],
+    explanation: "SSB只传输一个边带，可节省功率和带宽，并具有较好的抗干扰能力；设备实现相对复杂。",
+    knowledgeTag: "am_dsb_ssb_fdm",
+    difficulty: 1,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-M-015",
+    type: "multiple",
+    question: "以下哪些码型通常含有丰富的定时信息？",
+    options: [
+      { key: "A", text: "CMI码" },
+      { key: "B", text: "单极性NRZ码" },
+      { key: "C", text: "HDB3码" },
+      { key: "D", text: "AMI长连0段" }
+    ],
+    answer: ["A", "C"],
+    explanation: "CMI码跳变频繁，HDB3通过取代节限制长连0，二者有利于提取定时信息。",
+    knowledgeTag: "line_codes",
+    difficulty: 2,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-M-016",
+    type: "multiple",
+    question: "关于双极性基带信号，正确的是（ ）。",
+    options: [
+      { key: "A", text: "等概时最佳判决门限为0" },
+      { key: "B", text: "一定具有直流分量" },
+      { key: "C", text: "相对于单极性码可减小直流分量" },
+      { key: "D", text: "只能用于2FSK调制" }
+    ],
+    answer: ["A", "C"],
+    explanation: "双极性等概信号判决门限为0，正负电平抵消可减小直流分量。",
+    knowledgeTag: "optimal_threshold",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-M-017",
+    type: "multiple",
+    question: "下列关于香农公式C=B log2(1+S/N)的说法正确的是（ ）。",
+    options: [
+      { key: "A", text: "B为信道带宽" },
+      { key: "B", text: "S/N应使用线性比值" },
+      { key: "C", text: "S/N直接代入dB数值" },
+      { key: "D", text: "C表示信道容量" }
+    ],
+    answer: ["A", "B", "D"],
+    explanation: "香农公式中B为带宽，C为容量，信噪比必须用线性值而不是dB值。",
+    knowledgeTag: "shannon",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-M-018",
+    type: "multiple",
+    question: "关于信息量I=-log2(P)，正确的是（ ）。",
+    options: [
+      { key: "A", text: "事件概率越小，信息量越大" },
+      { key: "B", text: "概率为1的事件信息量为0" },
+      { key: "C", text: "概率越大，信息量越大" },
+      { key: "D", text: "以2为底时单位为bit" }
+    ],
+    answer: ["A", "B", "D"],
+    explanation: "I=-log2(P)，概率越小信息量越大；P=1时I=0；以2为底对应bit。",
+    knowledgeTag: "info_amount",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-M-019",
+    type: "multiple",
+    question: "关于调频指数β和卡森公式，正确的是（ ）。",
+    options: [
+      { key: "A", text: "β=Δf/fm" },
+      { key: "B", text: "B≈2(Δf+fm)" },
+      { key: "C", text: "β越大带宽越小" },
+      { key: "D", text: "最大频偏越大，近似带宽通常越大" }
+    ],
+    answer: ["A", "B", "D"],
+    explanation: "β=Δf/fm，卡森公式B≈2(Δf+fm)，频偏增大时带宽通常增大。",
+    knowledgeTag: "carson",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-M-020",
+    type: "multiple",
+    question: "关于OOK、2FSK、2PSK波形特征，正确的是（ ）。",
+    options: [
+      { key: "A", text: "OOK用载波有无表示符号" },
+      { key: "B", text: "2FSK用两个不同频率表示符号" },
+      { key: "C", text: "2PSK用相位反转表示符号变化" },
+      { key: "D", text: "三者都只能改变载波幅度" }
+    ],
+    answer: ["A", "B", "C"],
+    explanation: "OOK对应幅度开关，2FSK对应频率键控，2PSK对应相位键控。",
+    knowledgeTag: "ook_fsk_psk_waveform",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-J-001",
+    type: "judge",
+    question: "消息中所含信息量与消息的重要程度有关。",
+    options: [],
+    answer: false,
+    explanation: "信息量只与消息出现概率有关，与主观重要程度无关。",
+    knowledgeTag: "info_amount",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-J-002",
+    type: "judge",
+    question: "消息所表达的事件越不可能发生，信息量就越大。",
+    options: [],
+    answer: true,
+    explanation: "I=-log2(P)，概率P越小，信息量越大。",
+    knowledgeTag: "info_amount",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-J-003",
+    type: "judge",
+    question: "通信系统的有效性和可靠性往往是相互矛盾的。",
+    options: [],
+    answer: true,
+    explanation: "提高可靠性常需增加冗余或降低速率，可能牺牲有效性。",
+    knowledgeTag: "comm_basics",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-J-004",
+    type: "judge",
+    question: "对于二进制数字信号，M=2，码元速率和信息速率相等。",
+    options: [],
+    answer: false,
+    explanation: "按作业系统口径该题判错。严格写单位时，二进制有Rb=RB×log2(2)=RB，但二者物理量和单位不同。",
+    knowledgeTag: "baud_rate",
+    difficulty: 2,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-J-005",
+    type: "judge",
+    question: "模拟信号是取值离散的信号。",
+    options: [],
+    answer: false,
+    explanation: "模拟信号的取值通常连续；取值离散是数字信号特征。",
+    knowledgeTag: "comm_basics",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-J-006",
+    type: "judge",
+    question: "若线性系统的输入为高斯过程，则系统输出也是高斯过程。",
+    options: [],
+    answer: true,
+    explanation: "高斯过程经过线性系统后仍为高斯过程。",
+    knowledgeTag: "gaussian_linear",
+    difficulty: 1,
+    sourceGroup: "作业2"
+  },
+  {
+    id: "CP-J-007",
+    type: "judge",
+    question: "连续信号2e^-t u(t)是能量信号。",
+    options: [],
+    answer: true,
+    explanation: "u(t)限制信号只在t≥0存在，能量积分∫0∞4e^-2t dt=2，有限，所以是能量信号。",
+    knowledgeTag: "energy_power_signal",
+    difficulty: 2,
+    sourceGroup: "作业2"
+  },
+  {
+    id: "CP-J-008",
+    type: "judge",
+    question: "连续信号2e^-t是能量信号。",
+    options: [],
+    answer: false,
+    explanation: "未乘u(t)时，t趋于负无穷信号幅度发散，能量积分不收敛，不是能量信号。",
+    knowledgeTag: "energy_power_signal",
+    difficulty: 2,
+    sourceGroup: "作业2"
+  },
+  {
+    id: "CP-J-009",
+    type: "judge",
+    question: "具有各态历经的随机过程一定是平稳过程。",
+    options: [],
+    answer: true,
+    explanation: "本课程作业口径认为各态历经过程必须满足平稳性条件。",
+    knowledgeTag: "wss",
+    difficulty: 1,
+    sourceGroup: "作业2"
+  },
+  {
+    id: "CP-J-010",
+    type: "judge",
+    question: "广平稳随机过程必定是严义平稳的。",
+    options: [],
+    answer: false,
+    explanation: "广义平稳只约束均值和自相关函数，不能推出严义平稳。",
+    knowledgeTag: "wss",
+    difficulty: 1,
+    sourceGroup: "作业2"
+  },
+  {
+    id: "CP-J-011",
+    type: "judge",
+    question: "乘性干扰特点：当没有信号时，没有乘性干扰。",
+    options: [],
+    answer: true,
+    explanation: "乘性干扰与信号相乘，无信号时乘性干扰项随信号为零。",
+    knowledgeTag: "additive_multiplicative",
+    difficulty: 1,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-J-012",
+    type: "judge",
+    question: "随参信道是基本不随时间变化的信道。",
+    options: [],
+    answer: false,
+    explanation: "随参信道参数随时间随机变化；恒参信道才基本不随时间变化。",
+    knowledgeTag: "channel_const_random",
+    difficulty: 1,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-J-013",
+    type: "judge",
+    question: "若带宽B趋于无穷大，信道容量会趋于无限大。",
+    options: [],
+    answer: false,
+    explanation: "在噪声功率随带宽增长的通常模型下，B趋于无穷时容量趋于有限极限而非无穷大。",
+    knowledgeTag: "bw_infinite_capacity",
+    difficulty: 2,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-J-014",
+    type: "judge",
+    question: "无限制增大带宽，信道容量也会无限制增大。",
+    options: [],
+    answer: false,
+    explanation: "单纯无限制增大带宽不能使容量无限制增大，这是香农公式常见陷阱。",
+    knowledgeTag: "bw_infinite_capacity",
+    difficulty: 2,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-J-015",
+    type: "judge",
+    question: "加性干扰特点：当没有信号时，没有加性干扰。",
+    options: [],
+    answer: false,
+    explanation: "加性干扰独立叠加在信号上，即使没有信号也可能存在。",
+    knowledgeTag: "additive_multiplicative",
+    difficulty: 1,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-J-016",
+    type: "judge",
+    question: "如果信号带宽大于信道带宽，且相当多能量的频率分量不在信道通带范围内，信号将严重畸变失真。",
+    options: [],
+    answer: true,
+    explanation: "超出通带的频率分量会被滤除，若这些分量含有较多能量，波形会严重失真。",
+    knowledgeTag: "channel_const_random",
+    difficulty: 1,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-J-017",
+    type: "judge",
+    question: "如果预先不知道调制信号m(t)的具体形式，则无法判断已调信号是调相信号还是调频信号。",
+    options: [],
+    answer: true,
+    explanation: "FM和PM的相位表达形式可能相互转换；不知m(t)时无法可靠区分。",
+    knowledgeTag: "fm_pm_trap",
+    difficulty: 2,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-J-018",
+    type: "judge",
+    question: "调频信号的调频指数越大，其带宽越小。",
+    options: [],
+    answer: false,
+    explanation: "调频指数增大通常意味着频偏增大，按卡森公式带宽不会变小。",
+    knowledgeTag: "carson",
+    difficulty: 1,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-J-019",
+    type: "judge",
+    question: "6cos[2π×10^8t+3cos(4π×10^3t)]是调频信号。",
+    options: [],
+    answer: false,
+    explanation: "按本课程判题口径：不知m(t)无法区分FM/PM，故判错。",
+    knowledgeTag: "fm_pm_trap",
+    difficulty: 2,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-J-020",
+    type: "judge",
+    question: "AM调制是一种线性过程。",
+    options: [],
+    answer: false,
+    explanation: "按本课程判题口径，此判断为错。",
+    knowledgeTag: "am_dsb_ssb_fdm",
+    difficulty: 2,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-J-021",
+    type: "judge",
+    question: "直接调频法的主要优点是可以获得较大的频偏。",
+    options: [],
+    answer: true,
+    explanation: "直接调频法可获得较大频偏，但频率稳定度相对不高。",
+    knowledgeTag: "direct_fm",
+    difficulty: 1,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-J-022",
+    type: "judge",
+    question: "间接调频法的主要优点是可以获得较大的频偏。",
+    options: [],
+    answer: false,
+    explanation: "间接调频法的频率稳定度较好，但不以获得较大频偏为主要优点。",
+    knowledgeTag: "direct_fm",
+    difficulty: 1,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-J-023",
+    type: "judge",
+    question: "单极性NRZ信号中没有定时分量。",
+    options: [],
+    answer: true,
+    explanation: "单极性NRZ长串同码时缺少跳变，不含可靠定时分量。",
+    knowledgeTag: "line_codes",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-J-024",
+    type: "judge",
+    question: "单极性非归零码具有直流分量。",
+    options: [],
+    answer: true,
+    explanation: "单极性NRZ电平不关于零对称，通常含直流分量。",
+    knowledgeTag: "line_codes",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-J-025",
+    type: "judge",
+    question: "单极性非归零码不适应有交流耦合的远距离传输，只适用于计算机内部或极近距离的传输。",
+    options: [],
+    answer: true,
+    explanation: "单极性NRZ含直流分量且定时信息不足，不适合交流耦合远距离传输。",
+    knowledgeTag: "line_codes",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-J-026",
+    type: "judge",
+    question: "单极性非归零码有直流分量，要求传输线路具有直流传输能力。",
+    options: [],
+    answer: true,
+    explanation: "存在直流分量的码型需要线路能够传输直流成分。",
+    knowledgeTag: "line_codes",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-J-027",
+    type: "judge",
+    question: "CMI频繁出现波形跳变，含有丰富的定时信息。",
+    options: [],
+    answer: true,
+    explanation: "CMI编码通过规则跳变提供较丰富的定时信息。",
+    knowledgeTag: "line_codes",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-J-028",
+    type: "judge",
+    question: "单极性基带信号是否存在离散线谱取决于矩形脉冲的占空比。",
+    options: [],
+    answer: true,
+    explanation: "矩形脉冲占空比会影响功率谱中离散线谱成分。",
+    knowledgeTag: "baseband_spectrum",
+    difficulty: 2,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-J-029",
+    type: "judge",
+    question: "双极性非归零码有直流分量，要求传输线路具有直流传输能力。",
+    options: [],
+    answer: false,
+    explanation: "等概双极性NRZ正负电平抵消，通常无直流分量。",
+    knowledgeTag: "line_codes",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-J-030",
+    type: "judge",
+    question: "AMI码没有直流成分。",
+    options: [],
+    answer: true,
+    explanation: "AMI码的正负脉冲交替出现，可消除直流成分。",
+    knowledgeTag: "line_codes",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-J-031",
+    type: "judge",
+    question: "码间串扰会使前一码元波形的拖尾影响后续码元的抽样判决。",
+    options: [],
+    answer: true,
+    explanation: "码间串扰的本质就是码元波形在时间上相互重叠，前一码元拖尾会影响后续码元判决。",
+    knowledgeTag: "isi",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-J-032",
+    type: "judge",
+    question: "在相干解调条件下，2PSK的抗加性高斯白噪声性能通常优于2ASK。",
+    options: [],
+    answer: true,
+    explanation: "2PSK以相反相位区分符号，信号距离较大；2ASK受幅度噪声和门限影响更明显，因此2PSK抗噪性能通常更好。",
+    knowledgeTag: "psk_anti_noise",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-J-033",
+    type: "judge",
+    question: "2FSK通常需要两个不同频率承载二进制符号，因此频带利用率一般低于2ASK和2PSK。",
+    options: [],
+    answer: true,
+    explanation: "2FSK的两个符号占据不同频率位置，所需频带较宽，所以频带利用率通常最低。",
+    knowledgeTag: "fsk_spectral_eff",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-J-034",
+    type: "judge",
+    question: "只要已调信号相位项中出现cos形式的调制项，就一定可以判定它是FM信号。",
+    options: [],
+    answer: false,
+    explanation: "仅凭相位项形式不能可靠区分FM和PM；若不知道m(t)的具体形式，可能无法判定调制类型。",
+    knowledgeTag: "fm_pm_trap",
+    difficulty: 2,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-B-001",
+    type: "blank",
+    question: "按传输媒介，通信系统可分为____通信系统和____通信系统。",
+    options: [],
+    answer: [["有线"], ["无线"]],
+    explanation: "按传输媒介分类，通信系统分为有线通信系统和无线通信系统。",
+    knowledgeTag: "comm_basics",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-B-002",
+    type: "blank",
+    question: "在八进制（M=8）中，若码元速率为1000 Baud，则信息速率为____ bit/s。",
+    options: [],
+    answer: "3000",
+    explanation: "八进制每码元携带3 bit，Rb=1000×3=3000 bit/s。",
+    knowledgeTag: "info_rate",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-B-003",
+    type: "blank",
+    question: "已知二进制数字信号每个码元占有的时间为2 ms，0、1码等概率出现，则码元速率为____ Baud，信息速率为____ bit/s。",
+    options: [],
+    answer: [["500"], ["500"]],
+    explanation: "RB=1/Ts=1/(2×10^-3)=500 Baud；二进制每码元1 bit，所以Rb=500 bit/s。",
+    knowledgeTag: "baud_rate",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-B-004",
+    type: "blank",
+    question: "若符号“E”出现的概率为0.25，则符号“E”所包含的信息量为____ bit。",
+    options: [],
+    answer: "2",
+    explanation: "I=-log2(0.25)=2 bit。",
+    knowledgeTag: "info_amount",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-B-005",
+    type: "blank",
+    question: "通信系统中，用于传输信号的物理媒介称为____。",
+    options: [],
+    answer: "信道",
+    explanation: "传输信号的物理媒介称为信道。",
+    knowledgeTag: "comm_basics",
+    difficulty: 1,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-B-006",
+    type: "blank",
+    question: "根据乘性干扰的特性，调制信道可分为恒参信道和随参信道，其中光纤信道是一种____信道，短波电离层反射信道是一种____信道。",
+    options: [],
+    answer: [["恒参"], ["随参"]],
+    explanation: "光纤信道参数基本稳定，属于恒参信道；短波电离层反射受传播条件变化影响，属于随参信道。",
+    knowledgeTag: "channel_const_random",
+    difficulty: 1,
+    sourceGroup: "作业2"
+  },
+  {
+    id: "CP-B-007",
+    type: "blank",
+    question: "若X和Y相互独立，且均值均为0、方差均为4，高斯随机过程Z=Xcos2000πt-Ysin2000πt，则Z的均值为____，方差为____。",
+    options: [],
+    answer: [["0"], ["4"]],
+    explanation: "线性组合均值为0；方差为4cos²+4sin²=4。",
+    knowledgeTag: "gaussian_linear",
+    difficulty: 2,
+    sourceGroup: "作业2"
+  },
+  {
+    id: "CP-B-008",
+    type: "blank",
+    question: "某随机过程X的均值为1，方差为2，则随机过程Y=2X+1的均值为____，方差为____。",
+    options: [],
+    answer: [["3"], ["8"]],
+    explanation: "E[Y]=2E[X]+1=3；Var(Y)=2²Var(X)=8。",
+    knowledgeTag: "gaussian_linear",
+    difficulty: 1,
+    sourceGroup: "作业2"
+  },
+  {
+    id: "CP-B-009",
+    type: "blank",
+    question: "广义平稳随机过程的数学期望、方差与____无关，自相关函数只与____有关。",
+    options: [],
+    answer: [["时间"], ["时间间隔", "时间差"]],
+    explanation: "广义平稳要求均值和方差不随时间变化，自相关函数只依赖时间间隔。",
+    knowledgeTag: "wss",
+    difficulty: 1,
+    sourceGroup: "作业2"
+  },
+  {
+    id: "CP-B-010",
+    type: "blank",
+    question: "如果白噪声取值的概率分布服从高斯分布，则称之为____。",
+    options: [],
+    answer: "高斯白噪声",
+    explanation: "服从高斯分布的白噪声称为高斯白噪声。",
+    knowledgeTag: "gaussian_linear",
+    difficulty: 1,
+    sourceGroup: "作业2"
+  },
+  {
+    id: "CP-B-011",
+    type: "blank",
+    question: "用双踪示波器观察到调幅波，包络最大值为20 V、最小值为4 V，则调幅度为____。（写成小数，保留两位）",
+    options: [],
+    answer: "0.67",
+    explanation: "ma=(Vmax-Vmin)/(Vmax+Vmin)=(20-4)/(20+4)=16/24≈0.67。",
+    knowledgeTag: "ma_index",
+    difficulty: 1,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-B-012",
+    type: "blank",
+    question: "频分复用（FDM）按____分割信号。",
+    options: [],
+    answer: "频率",
+    explanation: "FDM是Frequency Division Multiplexing，即按频率划分信道资源。",
+    knowledgeTag: "am_dsb_ssb_fdm",
+    difficulty: 1,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-B-013",
+    type: "blank",
+    question: "已知FM信号表达式6cos[2π×10^8t+3cos(4π×10^3t)]，则调频指数为____。",
+    options: [],
+    answer: "3",
+    explanation: "角度项中调制项系数为3，按题目表达式可读出调制指数为3。",
+    knowledgeTag: "fm_beta",
+    difficulty: 1,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-B-014",
+    type: "blank",
+    question: "产生SSB信号的方法有两种：____和____。",
+    options: [],
+    answer: [["滤波法"], ["相移法", "移相法"]],
+    explanation: "SSB常用产生方法为滤波法和相移法（也称移相法）。",
+    knowledgeTag: "am_dsb_ssb_fdm",
+    difficulty: 1,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-B-015",
+    type: "blank",
+    question: "已知FM信号表达式6cos[2π×10^8t+3cos(4π×10^3t)]，则载波幅度为____ V。",
+    options: [],
+    answer: "6",
+    explanation: "余弦函数外的幅度系数为6 V。",
+    knowledgeTag: "fm_beta",
+    difficulty: 1,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-B-016",
+    type: "blank",
+    question: "已知调频信号 s(t)=20cos[2×10^8·π·t+8cos(4000π·t)]，则调制指数β为____，最大频偏Δf为____ kHz，按卡森公式得到的信号带宽B为____ kHz。",
+    options: [],
+    answer: [["8"], ["16"], ["36"]],
+    explanation: "相位中的调制项振幅即调制指数，β=8。调制信号角频率为4000π，故fm=4000π/(2π)=2000 Hz=2 kHz。最大频偏Δf=β·fm=8×2=16 kHz。卡森公式B≈2(Δf+fm)=2×(16+2)=36 kHz。",
+    knowledgeTag: "fm_beta",
+    difficulty: 2,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-B-017",
+    type: "blank",
+    question: "前面的码元对后面的若干码元有影响，这种影响称为____。",
+    options: [],
+    answer: "码间串扰",
+    explanation: "码元波形拖尾影响后续码元判决，称为码间串扰。",
+    knowledgeTag: "isi",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-B-018",
+    type: "blank",
+    question: "数字基带信号的功率谱密度可能包括两部分，即____和____。",
+    options: [],
+    answer: [["连续谱"], ["离散谱"]],
+    explanation: "数字基带功率谱通常由连续谱和可能存在的离散谱组成。",
+    knowledgeTag: "baseband_spectrum",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-B-019",
+    type: "blank",
+    question: "在等概条件下，双极性的最佳判决门限电平为____。",
+    options: [],
+    answer: ["0", "零"],
+    explanation: "等概双极性电平关于零对称，最佳门限为0。",
+    knowledgeTag: "optimal_threshold",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-B-020",
+    type: "blank",
+    question: "码元持续时间为Ts时，码元速率RB=____。",
+    options: [],
+    answer: ["1/Ts", "1/T_s"],
+    explanation: "码元速率定义为单位时间内传输的码元数，所以RB=1/Ts。",
+    knowledgeTag: "baud_rate",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-B-021",
+    type: "blank",
+    question: "无码间串扰传输要求在抽样时刻，除当前码元外，其他码元对抽样值的贡献为____。",
+    options: [],
+    answer: ["0", "零"],
+    explanation: "码间串扰来自相邻码元在抽样时刻的叠加影响；无码间串扰条件要求其他码元在该抽样时刻贡献为0。",
+    knowledgeTag: "isi",
+    difficulty: 2,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-B-022",
+    type: "blank",
+    question: "平稳随机过程自相关函数中，R(0)表示____，R(∞)表示____。",
+    options: [],
+    answer: [["平均功率"], ["直流功率"]],
+    explanation: "R(0)=E[X²(t)]表示平均功率；R(∞)等于均值平方，表示直流功率。",
+    knowledgeTag: "autocorr_r0_rinf",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-B-023",
+    type: "blank",
+    question: "已知调频信号s(t)=12cos[2π·1×10^8·t+5cos(2π·3×10^3·t)]，则调制指数β为____，调制频率fm为____ kHz，最大频偏Δf为____ kHz，按卡森公式得到的信号带宽B为____ kHz。",
+    options: [],
+    answer: [["5"], ["3", "3 kHz"], ["15", "15 kHz"], ["36", "36 kHz"]],
+    explanation: "调制指数β=相位项中调制分量的振幅系数，代入表达式得β=5。调制频率fm=调制项角频率/(2π)，代入2π·3×10^3得fm=(2π·3×10^3)/(2π)=3×10^3 Hz=3 kHz。最大频偏Δf=β·fm=5×3=15 kHz。卡森带宽B=2(Δf+fm)=2×(15+3)=36 kHz。载波频率1×10^8 Hz不参与带宽计算。",
+    knowledgeTag: "carson",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-B-024",
+    type: "blank",
+    question: "已知调频信号s(t)=8cos[2π·5×10^7·t+2cos(2π·4×10^3·t)]，则载波幅度Ac为____ V，调制指数β为____，最大频偏Δf为____ kHz，按卡森公式得到的信号带宽B为____ kHz。",
+    options: [],
+    answer: [["8", "8 V"], ["2"], ["8", "8 kHz"], ["24", "24 kHz"]],
+    explanation: "载波幅度Ac=cos前的幅度系数，代入表达式得Ac=8 V。调制指数β=相位项中调制分量的振幅系数，代入得β=2。调制频率fm=调制项角频率/(2π)，代入2π·4×10^3得fm=(2π·4×10^3)/(2π)=4×10^3 Hz=4 kHz。最大频偏Δf=β·fm=2×4=8 kHz。卡森带宽B=2(Δf+fm)=2×(8+4)=24 kHz。载波频率5×10^7 Hz不参与带宽计算。",
+    knowledgeTag: "fm_beta",
+    difficulty: 2,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-B-025",
+    type: "blank",
+    question: "已知调频信号s(t)=15cos[2π·8×10^7·t+10cos(2π·1×10^3·t)]，则调制指数β为____，调制频率fm为____ kHz，最大频偏Δf为____ kHz，按卡森公式得到的信号带宽B为____ kHz。",
+    options: [],
+    answer: [["10"], ["1", "1 kHz"], ["10", "10 kHz"], ["22", "22 kHz"]],
+    explanation: "调制指数β=相位项中调制分量的振幅系数，代入表达式得β=10。调制频率fm=调制项角频率/(2π)，代入2π·1×10^3得fm=(2π·1×10^3)/(2π)=1×10^3 Hz=1 kHz。最大频偏Δf=β·fm=10×1=10 kHz。卡森带宽B=2(Δf+fm)=2×(10+1)=22 kHz。载波频率8×10^7 Hz不参与带宽计算。",
+    knowledgeTag: "carson",
+    difficulty: 2,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-B-026",
+    type: "blank",
+    question: "已知调频信号s(t)=6cos[2π·2×10^8·t+3cos(2π·5×10^3·t)]，则载波幅度Ac为____ V，调制指数β为____，调制频率fm为____ kHz，按卡森公式得到的信号带宽B为____ kHz。",
+    options: [],
+    answer: [["6", "6 V"], ["3"], ["5", "5 kHz"], ["40", "40 kHz"]],
+    explanation: "载波幅度Ac=cos前的幅度系数，代入表达式得Ac=6 V。调制指数β=相位项中调制分量的振幅系数，代入得β=3。调制频率fm=调制项角频率/(2π)，代入2π·5×10^3得fm=(2π·5×10^3)/(2π)=5×10^3 Hz=5 kHz。最大频偏Δf=β·fm=3×5=15 kHz。卡森带宽B=2(Δf+fm)=2×(15+5)=40 kHz。载波频率2×10^8 Hz不参与带宽计算。",
+    knowledgeTag: "fm_beta",
+    difficulty: 3,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-C-001",
+    type: "calculation",
+    question: "设某四进制数字传输系统中每个码元持续时间为833×10^-6 s，连续工作1 h后接收端收到6个错码，且每个错误码元中仅发生1 bit错误。求码元速率、信息速率、误码率和误信率。",
+    options: [],
+    answer: { final: "RB≈1200 Baud，Rb≈2400 bit/s，误码率≈1.39×10^-6，误信率≈6.94×10^-7", accept: ["1200 Baud;2400 bit/s;1.39e-6;6.94e-7"], tolerance: 0.02 },
+    explanation: "公式：RB=1/Ts，Rb=RBlog2M，误码率=错码数/总码元数，误信率=错比特数/总比特数。代入Ts=833×10^-6 s，得RB≈1200 Baud；四进制每码元2 bit，Rb=1200×2=2400 bit/s；1 h码元数=1200×3600=4.32×10^6，误码率=6/(4.32×10^6)=1.39×10^-6；总比特数=2400×3600=8.64×10^6，误信率=6/(8.64×10^6)=6.94×10^-7。最终结果为RB≈1200 Baud，Rb≈2400 bit/s，误码率≈1.39×10^-6，误信率≈6.94×10^-7。",
+    knowledgeTag: "ber_ser",
+    difficulty: 3,
+    sourceGroup: "作业1"
+  },
+  {
+    id: "CP-C-002",
+    type: "calculation",
+    question: "黑白电视图像每帧含有3×10^5个像素，每个像素有16个等概亮度等级，要求每秒传输30帧。若信道输出S/N=30 dB，求传输该图像所要求的最小带宽。",
+    options: [],
+    answer: { final: "约3.61 MHz", accept: ["3.61 MHz", "3.6 MHz"], tolerance: 0.05 },
+    explanation: "公式：R=像素数×每像素信息量×帧率，C=B log2(1+S/N)。代入16级亮度得每像素log2(16)=4 bit，R=3×10^5×4×30=3.6×10^7 bit/s；30 dB对应S/N=10^(30/10)=1000；B=R/log2(1001)≈3.6×10^7/9.967≈3.61×10^6 Hz。最终最小带宽约为3.61 MHz。",
+    knowledgeTag: "shannon",
+    difficulty: 3,
+    sourceGroup: "作业3"
+  },
+  {
+    id: "CP-C-003",
+    type: "calculation",
+    question: "某一单频调频波振幅为10 V，瞬时角频率为ω(t)=2π×10^7+2000πcos(200πt)，求调频波表达式、调频指数和近似带宽。",
+    options: [],
+    answer: { final: "s(t)=10cos(2π×10^7t+10sin200πt)，β=10，B≈2.2 kHz", accept: ["10cos(2π×10^7t+10sin200πt);10;2.2kHz"], tolerance: 0.05 },
+    explanation: "公式：θ(t)=∫ω(t)dt，β=Δf/fm，B≈2(Δf+fm)。代入ω(t)=2π×10^7+2000πcos(200πt)，得θ(t)=2π×10^7t+(2000π/200π)sin(200πt)=2π×10^7t+10sin(200πt)，所以s(t)=10cos(2π×10^7t+10sin200πt)；fm=200π/(2π)=100 Hz，Δf=βfm=10×100=1000 Hz，B≈2(1000+100)=2200 Hz。最终β=10，带宽约2.2 kHz。",
+    knowledgeTag: "fm_beta",
+    difficulty: 3,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-C-004",
+    type: "calculation",
+    question: "已知s(t)=cos(2π×10^4t)+4cos(2.2π×10^4t)+cos(2.4π×10^4t)是某AM已调信号展开式，求调幅系数和调制信号频率。",
+    options: [],
+    answer: { final: "ma=0.5，fm=1 kHz", accept: ["0.5;1kHz", "0.5;1000Hz"], tolerance: 0.01 },
+    explanation: "公式：AM单音展开中边带幅度=maAc/2，边带间隔=fm。代入三项频率10 kHz、11 kHz、12 kHz，中间11 kHz为载波，边带间隔为1 kHz，所以fm=1 kHz；载波幅度Ac=4，边带幅度1=maAc/2，得ma=2×1/4=0.5。最终调幅系数ma=0.5，调制信号频率fm=1 kHz。",
+    knowledgeTag: "ma_index",
+    difficulty: 3,
+    sourceGroup: "作业4"
+  },
+  {
+    id: "CP-C-005",
+    type: "calculation",
+    question: "八进制系统码元速率为2400 Baud，求每码元比特数和信息速率。",
+    options: [],
+    answer: { final: "3 bit/码元，7200 bit/s", accept: ["3;7200"], tolerance: 0 },
+    explanation: "公式：每码元比特数=log2M，Rb=RBlog2M。代入M=8，得log2(8)=3 bit/码元；代入RB=2400 Baud，Rb=2400×3=7200 bit/s。最终为3 bit/码元，7200 bit/s。",
+    knowledgeTag: "mary_bits",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-C-006",
+    type: "calculation",
+    question: "信道带宽B=4 kHz，信噪比S/N=20 dB，求信道容量。",
+    options: [],
+    answer: { final: "约26.63 kbit/s", accept: ["26.63 kbit/s", "26630 bit/s"], tolerance: 0.05 },
+    explanation: "公式：S/N=10^(dB/10)，C=B log2(1+S/N)。代入20 dB得S/N=10^(20/10)=100；代入B=4000 Hz，C=4000×log2(101)≈4000×6.658=26632 bit/s。最终容量约为26.63 kbit/s。",
+    knowledgeTag: "db_linear",
+    difficulty: 2,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-C-007",
+    type: "calculation",
+    question: "AM波包络最大值为18 V、最小值为6 V，求调幅系数ma。",
+    options: [],
+    answer: { final: "0.5", accept: ["0.5", "0.50"], tolerance: 0.01 },
+    explanation: "公式：ma=(Vmax-Vmin)/(Vmax+Vmin)。代入Vmax=18 V、Vmin=6 V，得ma=(18-6)/(18+6)=12/24=0.5。最终调幅系数ma=0.5。",
+    knowledgeTag: "ma_index",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-C-008",
+    type: "calculation",
+    question: "某FM信号最大频偏Δf=75 kHz，最高调制频率fm=15 kHz，求调频指数β和卡森近似带宽。",
+    options: [],
+    answer: { final: "β=5，B≈180 kHz", accept: ["5;180kHz"], tolerance: 0.01 },
+    explanation: "公式：β=Δf/fm，卡森公式B≈2(Δf+fm)。代入Δf=75 kHz、fm=15 kHz，得β=75/15=5；B≈2×(75+15)=180 kHz。最终β=5，带宽约180 kHz。",
+    knowledgeTag: "carson",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-C-009",
+    type: "calculation",
+    question: "某二进制系统码元持续时间Ts=0.25 ms，连续传输10 s收到2个错码。求码元速率和误码率。",
+    options: [],
+    answer: { final: "RB=4000 Baud，误码率=5×10^-5", accept: ["4000;5e-5"], tolerance: 0.01 },
+    explanation: "公式：RB=1/Ts，误码率=错码数/总码元数。代入Ts=0.25 ms，RB=1/(0.25×10^-3)=4000 Baud；10 s内总码元数=4000×10=40000；误码率=2/40000=5×10^-5。最终RB=4000 Baud，误码率=5×10^-5。",
+    knowledgeTag: "ber_ser",
+    difficulty: 2,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-C-010",
+    type: "calculation",
+    question: "按HDB3规则，若自上一个违代码V以来已有奇数个非零脉冲，当前四连0前的最近一个非零脉冲为+V，且当前出现0000，当前取代节应如何选择？",
+    options: [],
+    answer: { final: "000+V", accept: ["000+V", "000V且V为+V"] },
+    explanation: "HDB3四连0取代判定式：n=奇数时用000V，n=偶数时用B00V，其中n为自上一个V以来的非零脉冲数。本题代入n=奇数，所以选000V；V为违代码，极性与最近一个非零脉冲相同。代入最近一个非零脉冲为+V，得到取代节000+V，最终为000+V。",
+    knowledgeTag: "hdb3_rule",
+    difficulty: 3,
+    sourceGroup: "衍生题"
+  },
+  {
+    id: "CP-W-001",
+    type: "waveform",
+    question: "设发送数字信息为110010101100，画OOK波形时，应如何表示“1”和“0”？",
+    options: [],
+    answer: "序列110010101100中，1码元画有载波，0码元画无载波",
+    explanation: "OOK为开关键控，通常用有载波表示1，用无载波表示0，因此按110010101100逐码元开关载波。",
+    knowledgeTag: "ook_fsk_psk_waveform",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-W-002",
+    type: "waveform",
+    question: "设发送数字信息为110010101100，画2FSK波形时，若0对应Ts=2Tc、1对应Ts=Tc，应如何表示？",
+    options: [],
+    answer: "序列110010101100中，1码元画高频载波，0码元画低频载波",
+    explanation: "题设给出1对应一个码元内周期更短、频率更高的载波，0对应周期更长、频率更低的载波。",
+    knowledgeTag: "ook_fsk_psk_waveform",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-W-003",
+    type: "waveform",
+    question: "设发送数字信息为110010101100，画2PSK波形时，角度0代表0、角度180°代表1，应如何表示？",
+    options: [],
+    answer: "序列110010101100中，0码元画0°相位载波，1码元画180°相位载波",
+    explanation: "2PSK用载波相位区分二进制符号，题设规定0对应0°，1对应180°。",
+    knowledgeTag: "ook_fsk_psk_waveform",
+    difficulty: 1,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-W-004",
+    type: "waveform",
+    question: "已知信码序列为1010000000001100000100001，未给出的前一个码为+V。HDB3波形的关键处理是什么？",
+    options: [],
+    answer: "先按AMI交替极性编码1，遇四连0按000V或B00V取代，使V违代码极性交替并破坏长连0",
+    explanation: "HDB3不是简单把0画成零电平；长串0需替换为含违代码V的取代节，并用B脉冲保证相邻违代码极性交替，便于提取定时。",
+    knowledgeTag: "hdb3_rule",
+    difficulty: 3,
+    sourceGroup: "作业5"
+  },
+  {
+    id: "CP-W-005",
+    type: "waveform",
+    question: "给定二进制序列10110，若用双极性NRZ码表示，正电平代表1、负电平代表0，最终电平序列是什么？",
+    options: [],
+    answer: "+ - + + -",
+    explanation: "双极性NRZ用两个相反电平表示0和1；按题设1为正、0为负，10110对应+ - + + -。",
+    knowledgeTag: "line_codes",
+    difficulty: 1,
+    sourceGroup: "衍生题"
+  }
+];
+
+</script>
+  <script>
+/*
+ * 职责：管理 State(localStorage "cp_state_v1") 与内存 pendingResult。
+ * 状态读写：读取/写入 version、history、wrongBank、weakBank、tagStats、settings.paperConfig；
+ * pendingResult 仅保存在内存，setPendingResult 不写 localStorage，commitPendingResult 才落盘。
+ */
+(function (window) {
+  var STORAGE_KEY = "cp_state_v1";
+  var VALID_CONFIDENCE = { sure: true, unsure: true, guess: true };
+  var CP = window.CP = window.CP || {};
+  var currentState = makeDefaultState();
+  var pendingResult = null;
+
+  function makeDefaultState() {
+    return {
+      version: 1,
+      history: [],
+      wrongBank: [],
+      weakBank: [],
+      tagStats: {},
+      settings: {
+        paperConfig: {
+          single: 0,
+          multiple: 0,
+          judge: 0,
+          blank: 0,
+          calculation: 0,
+          waveform: 0
+        }
+      }
+    };
+  }
+
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function isObject(value) {
+    return value !== null && typeof value === "object" && !Array.isArray(value);
+  }
+
+  function uniqueStrings(items) {
+    var seen = {};
+    var result = [];
+    if (!Array.isArray(items)) {
+      return result;
+    }
+    items.forEach(function (item) {
+      if (item === null || item === undefined) {
+        return;
+      }
+      var key = String(item);
+      if (!seen[key]) {
+        seen[key] = true;
+        result.push(key);
+      }
+    });
+    return result;
+  }
+
+  function normalizePaperConfig(config) {
+    var defaults = makeDefaultState().settings.paperConfig;
+    var source = isObject(config) ? config : {};
+    var normalized = {};
+    Object.keys(defaults).forEach(function (key) {
+      var value = Number(source[key]);
+      normalized[key] = Number.isFinite(value) && value >= 0 ? Math.floor(value) : defaults[key];
+    });
+    return normalized;
+  }
+
+  function normalizeTagStat(stat) {
+    var source = isObject(stat) ? stat : {};
+    return {
+      attempts: Math.max(0, Number(source.attempts) || 0),
+      correct: Math.max(0, Number(source.correct) || 0),
+      wrong: Math.max(0, Number(source.wrong) || 0),
+      unsure: Math.max(0, Number(source.unsure) || 0),
+      markedWeak: Math.max(0, Number(source.markedWeak) || 0),
+      consecutiveCorrect: Math.max(0, Number(source.consecutiveCorrect) || 0),
+      masteryScore: clamp(Number(source.masteryScore) || 0, 0, 100),
+      drillRounds: Math.max(0, Number(source.drillRounds) || 0)
+    };
+  }
+
+  function normalizeTagStats(tagStats) {
+    var normalized = {};
+    if (!isObject(tagStats)) {
+      return normalized;
+    }
+    Object.keys(tagStats).forEach(function (tag) {
+      normalized[tag] = normalizeTagStat(tagStats[tag]);
+    });
+    return normalized;
+  }
+
+  function normalizeHistoryItem(item) {
+    var source = isObject(item) ? item : {};
+    return {
+      qid: source.qid === undefined || source.qid === null ? "" : String(source.qid),
+      userAnswer: source.userAnswer === undefined ? null : source.userAnswer,
+      correct: source.correct === true,
+      confidence: VALID_CONFIDENCE[source.confidence] ? source.confidence : "sure"
+    };
+  }
+
+  function normalizeHistoryEntry(entry) {
+    var source = isObject(entry) ? entry : {};
+    return {
+      paperId: source.paperId === undefined || source.paperId === null ? "" : String(source.paperId),
+      date: source.date ? String(source.date) : new Date().toISOString(),
+      score: Number(source.score) || 0,
+      items: Array.isArray(source.items) ? source.items.map(normalizeHistoryItem) : []
+    };
+  }
+
+  function normalizeState(state) {
+    var source = isObject(state) ? state : {};
+    return {
+      version: 1,
+      history: Array.isArray(source.history) ? source.history.map(normalizeHistoryEntry) : [],
+      wrongBank: uniqueStrings(source.wrongBank),
+      weakBank: uniqueStrings(source.weakBank),
+      tagStats: normalizeTagStats(source.tagStats),
+      settings: {
+        paperConfig: normalizePaperConfig(source.settings && source.settings.paperConfig)
+      }
+    };
+  }
+
+  function normalizePendingItem(item) {
+    var normalized = normalizeHistoryItem(item);
+    var source = isObject(item) ? item : {};
+    normalized.markedWeak = source.markedWeak === true;
+    normalized.tags = normalizeItemTags(source);
+    return normalized;
+  }
+
+  function normalizePendingResult(result) {
+    var source = isObject(result) ? result : {};
+    return {
+      paperId: source.paperId === undefined || source.paperId === null ? "" : String(source.paperId),
+      date: source.date ? String(source.date) : new Date().toISOString(),
+      score: Number(source.score) || 0,
+      items: Array.isArray(source.items) ? source.items.map(normalizePendingItem) : []
+    };
+  }
+
+  function normalizeItemTags(item) {
+    var tags = [];
+    if (Array.isArray(item.tags)) {
+      tags = item.tags;
+    } else if (item.tag !== undefined && item.tag !== null) {
+      tags = [item.tag];
+    }
+    return uniqueStrings(tags).filter(function (tag) {
+      return tag.length > 0;
+    });
+  }
+
+  function toHistoryEntry(result) {
+    return {
+      paperId: result.paperId,
+      date: result.date,
+      score: result.score,
+      items: result.items.map(normalizeHistoryItem)
+    };
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function recalcMastery(stat) {
+    if (!stat.attempts) {
+      return 0;
+    }
+    var accuracy = stat.correct / stat.attempts;
+    var uncertaintyPenalty = stat.unsure / stat.attempts * 20;
+    var weakPenalty = stat.markedWeak / stat.attempts * 15;
+    return Math.round(clamp(accuracy * 100 - uncertaintyPenalty - weakPenalty, 0, 100));
+  }
+
+  function applyBanks(state, items) {
+    var wrongHits = {};
+    var weakHits = {};
+
+    items.forEach(function (item) {
+      if (!item.qid) {
+        return;
+      }
+      if (item.correct === false) {
+        wrongHits[item.qid] = true;
+      } else if (item.confidence === "unsure" || item.confidence === "guess" || item.markedWeak) {
+        weakHits[item.qid] = true;
+      }
+    });
+
+    state.wrongBank = uniqueStrings(state.wrongBank.concat(Object.keys(wrongHits)));
+    var wrongSet = {};
+    state.wrongBank.forEach(function (qid) {
+      wrongSet[qid] = true;
+    });
+
+    state.weakBank = uniqueStrings(state.weakBank.concat(Object.keys(weakHits))).filter(function (qid) {
+      return !wrongSet[qid];
+    });
+  }
+
+  function applyTagStats(state, items) {
+    items.forEach(function (item) {
+      item.tags.forEach(function (tag) {
+        var stat = normalizeTagStat(state.tagStats[tag]);
+        stat.attempts += 1;
+        if (item.correct) {
+          stat.correct += 1;
+          stat.consecutiveCorrect += 1;
+        } else {
+          stat.wrong += 1;
+          stat.consecutiveCorrect = 0;
+        }
+        if (item.confidence === "unsure" || item.confidence === "guess") {
+          stat.unsure += 1;
+        }
+        if (item.markedWeak) {
+          stat.markedWeak += 1;
+        }
+        stat.masteryScore = recalcMastery(stat);
+        state.tagStats[tag] = stat;
+      });
+    });
+  }
+
+  function load() {
+    var raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      currentState = makeDefaultState();
+      return clone(currentState);
+    }
+    try {
+      currentState = normalizeState(JSON.parse(raw));
+    } catch (error) {
+      currentState = makeDefaultState();
+    }
+    return clone(currentState);
+  }
+
+  function save(state) {
+    currentState = normalizeState(state || currentState);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(currentState));
+    return clone(currentState);
+  }
+
+  function reset() {
+    currentState = makeDefaultState();
+    pendingResult = null;
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(currentState));
+    return clone(currentState);
+  }
+
+  function exportJSON() {
+    return JSON.stringify(currentState, null, 2);
+  }
+
+  function importJSON(json) {
+    currentState = normalizeState(JSON.parse(json));
+    pendingResult = null;
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(currentState));
+    return clone(currentState);
+  }
+
+  function setPendingResult(result) {
+    pendingResult = normalizePendingResult(result);
+    return clone(pendingResult);
+  }
+
+  function commitPendingResult() {
+    if (!pendingResult) {
+      return null;
+    }
+    currentState = normalizeState(currentState);
+    currentState.history.push(toHistoryEntry(pendingResult));
+    applyBanks(currentState, pendingResult.items);
+    applyTagStats(currentState, pendingResult.items);
+    save(currentState);
+    var committed = clone(pendingResult);
+    pendingResult = null;
+    return committed;
+  }
+
+  function discardPendingResult() {
+    var discarded = pendingResult ? clone(pendingResult) : null;
+    pendingResult = null;
+    return discarded;
+  }
+
+  function getPendingResult() {
+    return pendingResult ? clone(pendingResult) : null;
+  }
+
+  function getState() {
+    return clone(currentState);
+  }
+
+  CP.state = {
+    load: load,
+    save: save,
+    reset: reset,
+    exportJSON: exportJSON,
+    importJSON: importJSON,
+    setPendingResult: setPendingResult,
+    commitPendingResult: commitPendingResult,
+    discardPendingResult: discardPendingResult,
+    getPendingResult: getPendingResult,
+    getState: getState
+  };
+})(window);
+
+</script>
+  <script>
+/*
+ * 职责：引擎层；提供抽题、组卷、错题/不熟题重练、薄弱/低练习标签分析与加权选题。
+ * 状态读写：只通过 window.CP.state.getState() 读取 history、wrongBank、weakBank、tagStats、settings.paperConfig；
+ * 不写 State/localStorage，不操作 DOM，不渲染页面。
+ */
+(function (window) {
+  var CP = window.CP = window.CP || {};
+  var TYPE_ORDER = ["single", "multiple", "judge", "blank", "calculation", "waveform"];
+  var VALID_MODES = { comprehensive: true, theory: true, calculation: true, waveform: true };
+  var CORE_TAGS = [
+    "info_unit", "info_amount", "baud_rate", "info_rate", "mary_bits", "ber_ser",
+    "shannon", "db_linear", "bw_infinite_capacity", "am_dsb_ssb_fdm", "ma_index",
+    "fm_beta", "carson", "fm_pm_trap", "line_codes", "isi", "optimal_threshold",
+    "psk_anti_noise", "ask_threshold_sensitive", "fsk_spectral_eff", "hdb3_rule",
+    "ook_fsk_psk_waveform", "comm_basics"
+  ];
+
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function getQuestions() {
+    return Array.isArray(CP.questions) ? CP.questions : [];
+  }
+
+  function getTags() {
+    return CP.tags && typeof CP.tags === "object" ? CP.tags : {};
+  }
+
+  function getStateSnapshot() {
+    if (CP.state && typeof CP.state.getState === "function") {
+      return CP.state.getState();
+    }
+    return {
+      history: [],
+      wrongBank: [],
+      weakBank: [],
+      tagStats: {},
+      settings: { paperConfig: {} }
+    };
+  }
+
+  function normalizeConfig(config) {
+    var source = config || {};
+    var normalized = {};
+    TYPE_ORDER.forEach(function (type) {
+      var value = Number(source[type]);
+      normalized[type] = Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
+    });
+    return normalized;
+  }
+
+  function defaultDrillConfig() {
+    var fromState = getStateSnapshot().settings && getStateSnapshot().settings.paperConfig;
+    var normalized = normalizeConfig(fromState);
+    var total = TYPE_ORDER.reduce(function (sum, type) {
+      return sum + normalized[type];
+    }, 0);
+    return total > 0 ? normalized : {
+      single: 5,
+      multiple: 5,
+      judge: 5,
+      blank: 5,
+      calculation: 3,
+      waveform: 2
+    };
+  }
+
+  function normalizeMode(options) {
+    var mode = options && options.mode;
+    return VALID_MODES[mode] ? mode : "comprehensive";
+  }
+
+  function makeQuestionMap() {
+    var map = {};
+    getQuestions().forEach(function (question) {
+      map[question.id] = question;
+    });
+    return map;
+  }
+
+  function uniqueStrings(items) {
+    var seen = {};
+    var result = [];
+    (Array.isArray(items) ? items : []).forEach(function (item) {
+      if (item === null || item === undefined) {
+        return;
+      }
+      var key = String(item);
+      if (!seen[key]) {
+        seen[key] = true;
+        result.push(key);
+      }
+    });
+    return result;
+  }
+
+  function makeRng(seed) {
+    if (seed === undefined || seed === null) {
+      return Math.random;
+    }
+    var value = 0;
+    String(seed).split("").forEach(function (ch) {
+      value = (value * 31 + ch.charCodeAt(0)) >>> 0;
+    });
+    return function () {
+      value = (value * 1664525 + 1013904223) >>> 0;
+      return value / 4294967296;
+    };
+  }
+
+  function makePaperId(prefix, rng) {
+    var randomPart = Math.floor(rng() * 1000000).toString(36);
+    return prefix + "-" + Date.now().toString(36) + "-" + randomPart;
+  }
+
+  function hasHistory(state) {
+    var history = Array.isArray(state.history) && state.history.length > 0;
+    var banks = (Array.isArray(state.wrongBank) && state.wrongBank.length > 0) ||
+      (Array.isArray(state.weakBank) && state.weakBank.length > 0);
+    var stats = Object.keys(state.tagStats || {}).some(function (tag) {
+      return Number(state.tagStats[tag] && state.tagStats[tag].attempts) > 0;
+    });
+    return history || banks || stats;
+  }
+
+  function getStatsForTag(state, tag) {
+    var stat = state.tagStats && state.tagStats[tag] ? state.tagStats[tag] : {};
+    return {
+      attempts: Math.max(0, Number(stat.attempts) || 0),
+      correct: Math.max(0, Number(stat.correct) || 0),
+      wrong: Math.max(0, Number(stat.wrong) || 0),
+      unsure: Math.max(0, Number(stat.unsure) || 0),
+      markedWeak: Math.max(0, Number(stat.markedWeak) || 0),
+      consecutiveCorrect: Math.max(0, Number(stat.consecutiveCorrect) || 0),
+      masteryScore: Math.max(0, Math.min(100, Number(stat.masteryScore) || 0)),
+      drillRounds: Math.max(0, Number(stat.drillRounds) || 0)
+    };
+  }
+
+  function bankTagInfo(state) {
+    var qmap = makeQuestionMap();
+    var wrongIds = uniqueStrings(state.wrongBank);
+    var weakIds = uniqueStrings(state.weakBank).filter(function (id) {
+      return wrongIds.indexOf(id) === -1;
+    });
+    var tags = {};
+    wrongIds.concat(weakIds).forEach(function (id) {
+      var q = qmap[id];
+      if (q && q.knowledgeTag) {
+        tags[q.knowledgeTag] = true;
+      }
+    });
+    return {
+      wrongIds: wrongIds,
+      weakIds: weakIds,
+      tags: Object.keys(tags)
+    };
+  }
+
+  function getUntestedOrLowAttemptTags(limit) {
+    var state = getStateSnapshot();
+    var tags = getTags();
+    var threshold = Number(limit);
+    threshold = Number.isFinite(threshold) ? threshold : 1;
+    return Object.keys(tags).map(function (tag) {
+      var stat = getStatsForTag(state, tag);
+      var untestedBonus = stat.attempts === 0 ? 100 : 0;
+      var lowAttemptBonus = stat.attempts > 0 && stat.attempts <= threshold ? 60 - stat.attempts * 10 : 0;
+      return {
+        tag: tag,
+        label: tags[tag],
+        attempts: stat.attempts,
+        score: untestedBonus + Math.max(0, lowAttemptBonus),
+        stats: stat
+      };
+    }).filter(function (entry) {
+      return entry.attempts <= threshold;
+    }).sort(function (a, b) {
+      if (b.score !== a.score) {
+        return b.score - a.score;
+      }
+      return a.tag.localeCompare(b.tag);
+    });
+  }
+
+  function getWeakTags() {
+    var state = getStateSnapshot();
+    var tags = getTags();
+    var bankTags = bankTagInfo(state).tags;
+    return Object.keys(tags).map(function (tag) {
+      var stat = getStatsForTag(state, tag);
+      var attempts = Math.max(1, stat.attempts);
+      var wrongRate = stat.wrong / attempts;
+      var unsureRate = stat.unsure / attempts;
+      var markedRate = stat.markedWeak / attempts;
+      var lowMastery = 100 - stat.masteryScore;
+      var consecutivePenalty = stat.attempts > 0 && stat.consecutiveCorrect < 2 ? 10 : 0;
+      var bankPenalty = bankTags.indexOf(tag) >= 0 ? 15 : 0;
+      var score = Math.round(Math.min(100,
+        wrongRate * 35 +
+        unsureRate * 20 +
+        markedRate * 20 +
+        lowMastery * 0.25 +
+        consecutivePenalty +
+        bankPenalty
+      ));
+      return {
+        tag: tag,
+        label: tags[tag],
+        score: score,
+        stats: stat,
+        reasons: {
+          wrongRate: wrongRate,
+          unsureRate: unsureRate,
+          markedWeakRate: markedRate,
+          masteryScore: stat.masteryScore,
+          consecutiveCorrect: stat.consecutiveCorrect,
+          inWrongOrWeakBank: bankTags.indexOf(tag) >= 0
+        }
+      };
+    }).filter(function (entry) {
+      return entry.score > 0 || entry.stats.attempts > 0;
+    }).sort(function (a, b) {
+      if (b.score !== a.score) {
+        return b.score - a.score;
+      }
+      return a.tag.localeCompare(b.tag);
+    });
+  }
+
+  function modeWeight(question, mode) {
+    if (mode === "theory") {
+      return question.type === "calculation" || question.type === "waveform" ? 0.55 : 1.25;
+    }
+    if (mode === "calculation") {
+      return question.type === "calculation" ? 1.8 : 0.75;
+    }
+    if (mode === "waveform") {
+      return question.type === "waveform" ? 1.8 : 0.75;
+    }
+    return 1;
+  }
+
+  function questionWeight(question, context) {
+    var state = context.state || getStateSnapshot();
+    var tag = question.knowledgeTag;
+    var stat = getStatsForTag(state, tag);
+    var preferredTags = context.preferredTags || [];
+    var lowTags = context.lowTags || [];
+    var coreTags = context.coreTags || CORE_TAGS;
+    var bankTags = context.bankTags || [];
+    var weight = 1;
+
+    if (preferredTags.indexOf(tag) >= 0) {
+      weight += 6;
+    }
+    if (bankTags.indexOf(tag) >= 0) {
+      weight += 4;
+    }
+    if (lowTags.indexOf(tag) >= 0) {
+      weight += 4;
+    }
+    if (coreTags.indexOf(tag) >= 0) {
+      weight += 2;
+    }
+    if (stat.attempts > 0) {
+      weight += Math.max(0, (100 - stat.masteryScore) / 25);
+      weight += Math.min(3, stat.wrong / Math.max(1, stat.attempts) * 3);
+      weight += Math.min(2, stat.unsure / Math.max(1, stat.attempts) * 2);
+    }
+    if (stat.drillRounds >= 3) {
+      weight *= 0.2;
+    }
+    weight *= modeWeight(question, context.mode || "comprehensive");
+    return Math.max(0.05, weight);
+  }
+
+  function weightedPick(candidates, count, context) {
+    var rng = context.rng || Math.random;
+    var pool = candidates.slice();
+    var chosen = [];
+    while (pool.length > 0 && chosen.length < count) {
+      var total = pool.reduce(function (sum, question) {
+        return sum + questionWeight(question, context);
+      }, 0);
+      var target = rng() * total;
+      var acc = 0;
+      var index = 0;
+      for (; index < pool.length; index += 1) {
+        acc += questionWeight(pool[index], context);
+        if (acc >= target) {
+          break;
+        }
+      }
+      chosen.push(pool.splice(Math.min(index, pool.length - 1), 1)[0]);
+    }
+    return chosen;
+  }
+
+  function selectWeightedQuestions(candidates, count, context) {
+    var selectedIds = context && context.selectedIds ? context.selectedIds : {};
+    var safeContext = context || {};
+    var filtered = (Array.isArray(candidates) ? candidates : []).filter(function (question) {
+      return question && question.id && !selectedIds[question.id];
+    });
+    var chosen = weightedPick(filtered, Math.max(0, Number(count) || 0), safeContext);
+    chosen.forEach(function (question) {
+      selectedIds[question.id] = true;
+    });
+    return chosen.map(clone);
+  }
+
+  function allocateCounts(total, ratios) {
+    var keys = Object.keys(ratios);
+    var allocation = {};
+    var used = 0;
+    var remainders = keys.map(function (key) {
+      var raw = total * ratios[key];
+      var base = Math.floor(raw);
+      allocation[key] = base;
+      used += base;
+      return { key: key, rest: raw - base };
+    }).sort(function (a, b) {
+      return b.rest - a.rest;
+    });
+    var remaining = total - used;
+    remainders.forEach(function (item) {
+      if (remaining > 0) {
+        allocation[item.key] += 1;
+        remaining -= 1;
+      }
+    });
+    return allocation;
+  }
+
+  function coveragePick(candidates, count, selectedIds, rng) {
+    var byTag = {};
+    candidates.forEach(function (question) {
+      if (!selectedIds[question.id]) {
+        var tag = question.knowledgeTag || "";
+        byTag[tag] = byTag[tag] || [];
+        byTag[tag].push(question);
+      }
+    });
+    Object.keys(byTag).forEach(function (tag) {
+      byTag[tag].sort(function () {
+        return rng() - 0.5;
+      });
+    });
+    var tags = Object.keys(byTag).sort(function () {
+      return rng() - 0.5;
+    });
+    var chosen = [];
+    while (chosen.length < count && tags.length > 0) {
+      var progressed = false;
+      tags.slice().forEach(function (tag) {
+        if (chosen.length >= count) {
+          return;
+        }
+        var list = byTag[tag];
+        while (list.length && selectedIds[list[0].id]) {
+          list.shift();
+        }
+        if (list.length) {
+          var question = list.shift();
+          selectedIds[question.id] = true;
+          chosen.push(question);
+          progressed = true;
+        }
+      });
+      tags = tags.filter(function (tag) {
+        return byTag[tag].length > 0;
+      });
+      if (!progressed) {
+        break;
+      }
+    }
+    return chosen;
+  }
+
+  function candidatesByType(type) {
+    return getQuestions().filter(function (question) {
+      return question.type === type;
+    });
+  }
+
+  function buildPaper(config, options) {
+    var state = getStateSnapshot();
+    var mode = normalizeMode(options);
+    var rng = makeRng(options && options.seed);
+    var requested = normalizeConfig(config);
+    var selectedIds = {};
+    var items = [];
+    var meta = {
+      mode: mode,
+      requestedConfig: clone(requested),
+      actualCounts: {},
+      sources: {
+        wrongWeakVariant: 0,
+        lowAttempt: 0,
+        core: 0,
+        random: 0,
+        firstPaperCoverage: 0,
+        fallbackSameType: 0
+      },
+      degraded: [],
+      drillRoundDampenedTags: []
+    };
+    var historyExists = hasHistory(state);
+    var bankInfo = bankTagInfo(state);
+    var questionMap = makeQuestionMap();
+    var lowTagEntries = getUntestedOrLowAttemptTags(1);
+    var lowTags = lowTagEntries.map(function (entry) {
+      return entry.tag;
+    });
+    var dampenedTags = Object.keys(getTags()).filter(function (tag) {
+      return getStatsForTag(state, tag).drillRounds >= 3;
+    });
+    meta.drillRoundDampenedTags = dampenedTags;
+
+    TYPE_ORDER.forEach(function (type) {
+      var needed = requested[type];
+      if (!needed) {
+        return;
+      }
+      var typeCandidates = candidatesByType(type);
+      var picked = [];
+      if (!historyExists || mode !== "comprehensive") {
+        picked = coveragePick(typeCandidates, needed, selectedIds, rng);
+        meta.sources.firstPaperCoverage += picked.length;
+      } else {
+        var allocation = allocateCounts(needed, {
+          wrongWeakVariant: 0.4,
+          lowAttempt: 0.3,
+          core: 0.2,
+          random: 0.1
+        });
+        var sourceSpecs = [
+          {
+            name: "wrongWeakVariant",
+            count: allocation.wrongWeakVariant,
+            candidates: typeCandidates.filter(function (q) {
+              return bankInfo.tags.indexOf(q.knowledgeTag) >= 0 &&
+                bankInfo.wrongIds.concat(bankInfo.weakIds).indexOf(q.id) === -1;
+            }),
+            preferredTags: bankInfo.tags
+          },
+          {
+            name: "lowAttempt",
+            count: allocation.lowAttempt + (dampenedTags.length ? 1 : 0),
+            candidates: typeCandidates.filter(function (q) {
+              return lowTags.indexOf(q.knowledgeTag) >= 0;
+            }),
+            preferredTags: lowTags
+          },
+          {
+            name: "core",
+            count: allocation.core,
+            candidates: typeCandidates.filter(function (q) {
+              return CORE_TAGS.indexOf(q.knowledgeTag) >= 0;
+            }),
+            preferredTags: CORE_TAGS
+          },
+          {
+            name: "random",
+            count: allocation.random,
+            candidates: typeCandidates,
+            preferredTags: []
+          }
+        ];
+
+        sourceSpecs.forEach(function (spec) {
+          if (picked.length >= needed || spec.count <= 0) {
+            return;
+          }
+          var take = Math.min(spec.count, needed - picked.length);
+          var chosen = selectWeightedQuestions(spec.candidates, take, {
+            selectedIds: selectedIds,
+            state: state,
+            preferredTags: spec.preferredTags,
+            lowTags: lowTags,
+            coreTags: CORE_TAGS,
+            bankTags: bankInfo.tags,
+            mode: mode,
+            rng: rng
+          });
+          if (spec.name === "wrongWeakVariant" && chosen.length < take) {
+            bankInfo.wrongIds.concat(bankInfo.weakIds).forEach(function (id) {
+              var question = questionMap[id];
+              if (chosen.length >= take || !question || selectedIds[id]) {
+                return;
+              }
+              if (question.type === type && bankInfo.tags.indexOf(question.knowledgeTag) >= 0) {
+                selectedIds[id] = true;
+                chosen.push(clone(question));
+              }
+            });
+          }
+          chosen.forEach(function (question) {
+            picked.push(question);
+          });
+          meta.sources[spec.name] += chosen.length;
+          if (chosen.length < take) {
+            meta.degraded.push({
+              type: type,
+              source: spec.name,
+              requested: take,
+              actual: chosen.length,
+              reason: "source pool insufficient; fallback within same type"
+            });
+          }
+        });
+      }
+
+      if (picked.length < needed) {
+        var fallback = selectWeightedQuestions(typeCandidates, needed - picked.length, {
+          selectedIds: selectedIds,
+          state: state,
+          lowTags: lowTags,
+          coreTags: CORE_TAGS,
+          bankTags: bankInfo.tags,
+          mode: mode,
+          rng: rng
+        });
+        fallback.forEach(function (question) {
+          picked.push(question);
+        });
+        meta.sources.fallbackSameType += fallback.length;
+      }
+
+      if (picked.length < needed) {
+        meta.degraded.push({
+          type: type,
+          requested: needed,
+          actual: picked.length,
+          reason: "not enough unique questions in this type"
+        });
+      }
+      meta.actualCounts[type] = picked.length;
+      picked.forEach(function (question) {
+        items.push(question);
+      });
+    });
+
+    return {
+      paperId: makePaperId("paper", rng),
+      items: items.map(clone),
+      meta: meta
+    };
+  }
+
+  function buildDrillPaper(config) {
+    var state = getStateSnapshot();
+    var rng = makeRng(config && config.seed);
+    var requested = normalizeConfig(config || defaultDrillConfig());
+    var qmap = makeQuestionMap();
+    var selectedIds = {};
+    var items = [];
+    var bankInfo = bankTagInfo(state);
+    var targetTags = bankInfo.tags;
+    var meta = {
+      requestedConfig: clone(requested),
+      actualCounts: {},
+      sources: {
+        wrongOriginal: 0,
+        weakOriginal: 0,
+        tagVariant: 0,
+        fallbackSameType: 0
+      },
+      targetTags: targetTags,
+      degraded: []
+    };
+
+    TYPE_ORDER.forEach(function (type) {
+      var needed = requested[type];
+      if (!needed) {
+        return;
+      }
+      var picked = [];
+      [
+        { source: "wrongOriginal", ids: bankInfo.wrongIds },
+        { source: "weakOriginal", ids: bankInfo.weakIds }
+      ].forEach(function (group) {
+        group.ids.forEach(function (id) {
+          var question = qmap[id];
+          if (picked.length < needed && question && question.type === type && !selectedIds[id]) {
+            selectedIds[id] = true;
+            picked.push(clone(question));
+            meta.sources[group.source] += 1;
+          }
+        });
+      });
+
+      if (picked.length < needed) {
+        var variants = candidatesByType(type).filter(function (question) {
+          return targetTags.indexOf(question.knowledgeTag) >= 0 &&
+            bankInfo.wrongIds.concat(bankInfo.weakIds).indexOf(question.id) === -1;
+        });
+        var chosenVariants = selectWeightedQuestions(variants, needed - picked.length, {
+          selectedIds: selectedIds,
+          state: state,
+          preferredTags: targetTags,
+          bankTags: targetTags,
+          mode: "comprehensive",
+          rng: rng
+        });
+        chosenVariants.forEach(function (question) {
+          picked.push(question);
+        });
+        meta.sources.tagVariant += chosenVariants.length;
+      }
+
+      if (picked.length < needed) {
+        var fallback = selectWeightedQuestions(candidatesByType(type), needed - picked.length, {
+          selectedIds: selectedIds,
+          state: state,
+          mode: "comprehensive",
+          rng: rng
+        });
+        fallback.forEach(function (question) {
+          picked.push(question);
+        });
+        meta.sources.fallbackSameType += fallback.length;
+      }
+
+      if (picked.length < needed) {
+        meta.degraded.push({
+          type: type,
+          requested: needed,
+          actual: picked.length,
+          reason: "not enough unique questions in this type"
+        });
+      }
+      meta.actualCounts[type] = picked.length;
+      picked.forEach(function (question) {
+        items.push(question);
+      });
+    });
+
+    return {
+      paperId: makePaperId("drill", rng),
+      items: items.map(clone),
+      meta: meta
+    };
+  }
+
+  function buildHomeworkPaper(sourceGroup) {
+    var selected = {};
+    var items = getQuestions().map(function (question, index) {
+      return { question: question, index: index };
+    }).filter(function (entry) {
+      return entry.question.sourceGroup === sourceGroup && !selected[entry.question.id];
+    }).map(function (entry) {
+      selected[entry.question.id] = true;
+      return entry;
+    }).sort(function (a, b) {
+      var typeA = TYPE_ORDER.indexOf(a.question.type);
+      var typeB = TYPE_ORDER.indexOf(b.question.type);
+      if (typeA !== typeB) {
+        return typeA - typeB;
+      }
+      return a.index - b.index;
+    }).map(function (entry) {
+      return clone(entry.question);
+    });
+
+    return {
+      paperId: makePaperId("homework", Math.random),
+      items: items,
+      meta: {
+        mode: "homework",
+        sourceGroup: sourceGroup,
+        actualCount: items.length
+      }
+    };
+  }
+
+  function buildBankPaper(bankType) {
+    var state = getStateSnapshot();
+    var wrongIds = uniqueStrings(state.wrongBank);
+    var weakIds = uniqueStrings(state.weakBank);
+    var orderedIds;
+    if (bankType === "wrong") {
+      orderedIds = wrongIds;
+    } else if (bankType === "weak") {
+      orderedIds = weakIds;
+    } else {
+      // allWeak：合并 wrongBank + weakBank，去重，wrong 优先
+      var seen = {};
+      orderedIds = [];
+      wrongIds.concat(weakIds).forEach(function (id) {
+        if (!seen[id]) {
+          seen[id] = true;
+          orderedIds.push(id);
+        }
+      });
+    }
+    var qmap = makeQuestionMap();
+    var items = [];
+    var pickedIds = {};
+    orderedIds.forEach(function (id) {
+      var question = qmap[id];
+      if (question && !pickedIds[id]) {
+        pickedIds[id] = true;
+        items.push(clone(question));
+      }
+    });
+    return {
+      paperId: makePaperId("bank", Math.random),
+      items: items,
+      meta: {
+        mode: "bank",
+        bankType: bankType,
+        actualCount: items.length
+      }
+    };
+  }
+
+  CP.engine = {
+    buildPaper: buildPaper,
+    buildDrillPaper: buildDrillPaper,
+    buildHomeworkPaper: buildHomeworkPaper,
+    buildBankPaper: buildBankPaper,
+    getWeakTags: getWeakTags,
+    getUntestedOrLowAttemptTags: getUntestedOrLowAttemptTags,
+    selectWeightedQuestions: selectWeightedQuestions
+  };
+})(window);
+
+</script>
+  <script>
+/*
+ * 职责：波形题渲染层；根据 waveform 题干生成简化 SVG 波形、HDB3 编码序列和电平序列展示。
+ * 状态读写：不读取、不写入 State/localStorage；不参与判分，只向传入 container 写入安全 DOM/SVG。
+ */
+(function (window, document) {
+  var CP = window.CP = window.CP || {};
+  var SVG_NS = "http://www.w3.org/2000/svg";
+
+  function clear(node) {
+    while (node && node.firstChild) {
+      node.removeChild(node.firstChild);
+    }
+  }
+
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (key) {
+      if (key === "className") {
+        node.className = attrs[key];
+      } else if (key === "text") {
+        node.textContent = attrs[key];
+      } else {
+        node.setAttribute(key, attrs[key]);
+      }
+    });
+    (children || []).forEach(function (child) {
+      node.appendChild(typeof child === "string" ? document.createTextNode(child) : child);
+    });
+    return node;
+  }
+
+  function svgEl(tag, attrs, children) {
+    var node = document.createElementNS(SVG_NS, tag);
+    Object.keys(attrs || {}).forEach(function (key) {
+      node.setAttribute(key, attrs[key]);
+    });
+    (children || []).forEach(function (child) {
+      node.appendChild(child);
+    });
+    return node;
+  }
+
+  function extractBits(text) {
+    var matches = String(text || "").match(/[01]{4,}/g);
+    return matches && matches.length ? matches.reduce(function (best, item) {
+      return item.length > best.length ? item : best;
+    }, "") : "";
+  }
+
+  function detectKind(question) {
+    var text = String((question && question.question) || "");
+    var tag = question && question.knowledgeTag;
+    if (tag === "hdb3_rule" || /HDB3/i.test(text)) {
+      return "hdb3";
+    }
+    if (/2FSK/i.test(text)) {
+      return "fsk";
+    }
+    if (/2PSK/i.test(text)) {
+      return "psk";
+    }
+    if (/OOK/i.test(text)) {
+      return "ook";
+    }
+    if (tag === "line_codes" || /NRZ|双极性/.test(text)) {
+      return "line";
+    }
+    return "unknown";
+  }
+
+  function render(container, question) {
+    clear(container);
+    try {
+      var kind = detectKind(question);
+      var bits = extractBits(question && question.question);
+      if (!bits) {
+        renderFallback(container);
+        return;
+      }
+      container.className = (container.className || "") + " waveform-rendered";
+      if (kind === "hdb3") {
+        renderHdb3(container, bits, question);
+      } else if (kind === "ook" || kind === "fsk" || kind === "psk") {
+        renderCarrierWave(container, bits, kind);
+      } else if (kind === "line") {
+        renderLineCode(container, bits, question);
+      } else {
+        renderFallback(container);
+      }
+    } catch (error) {
+      clear(container);
+      renderFallback(container);
+    }
+  }
+
+  function renderFallback(container) {
+    container.appendChild(el("p", { className: "muted", text: "无法解析码序列，请参考讲解。" }));
+  }
+
+  function hdb3Encode(bits, previousPolarity) {
+    var result = [];
+    var lastPulse = previousPolarity || 1;
+    var lastV = previousPolarity || 1;
+    var pulsesSinceV = 0;
+    var zeroRun = 0;
+
+    function pushOne() {
+      lastPulse = -lastPulse;
+      result.push({ bit: "1", level: lastPulse, mark: "" });
+      pulsesSinceV += 1;
+      zeroRun = 0;
+    }
+
+    function pushZero() {
+      result.push({ bit: "0", level: 0, mark: "" });
+      zeroRun += 1;
+    }
+
+    function replaceFourZeros() {
+      var start = result.length - 4;
+      if (pulsesSinceV % 2 === 1) {
+        result[start] = { bit: "0", level: 0, mark: "" };
+        result[start + 1] = { bit: "0", level: 0, mark: "" };
+        result[start + 2] = { bit: "0", level: 0, mark: "" };
+        result[start + 3] = { bit: "0", level: lastPulse, mark: "V" };
+        lastV = lastPulse;
+      } else {
+        var vPolarity = -lastV;
+        var bPolarity = vPolarity;
+        result[start] = { bit: "0", level: bPolarity, mark: "B" };
+        result[start + 1] = { bit: "0", level: 0, mark: "" };
+        result[start + 2] = { bit: "0", level: 0, mark: "" };
+        result[start + 3] = { bit: "0", level: vPolarity, mark: "V" };
+        lastPulse = vPolarity;
+        lastV = vPolarity;
+      }
+      pulsesSinceV = 0;
+      zeroRun = 0;
+    }
+
+    bits.split("").forEach(function (bit) {
+      if (bit === "1") {
+        pushOne();
+      } else {
+        pushZero();
+        if (zeroRun === 4) {
+          replaceFourZeros();
+        }
+      }
+    });
+    return result;
+  }
+
+  function renderHdb3(container, bits, question) {
+    var previous = /\+V|\+/.test(question.question) ? 1 : -1;
+    var encoded = hdb3Encode(bits, previous);
+    container.appendChild(el("p", { className: "waveform-sequence", text: "HDB3：" + encoded.map(formatHdb3Token).join(" ") }));
+    container.appendChild(el("p", { className: "muted", text: "B 为平衡脉冲，V 为违代码；题干前一非零码按 +V 处理。" }));
+    container.appendChild(drawLevelWave(encoded.map(function (item) {
+      return item.level;
+    }), bits, encoded.map(function (item) {
+      return item.mark;
+    })));
+  }
+
+  function formatHdb3Token(item) {
+    if (item.level === 0) {
+      return "0";
+    }
+    return (item.level > 0 ? "+1" : "-1") + (item.mark ? "(" + item.mark + ")" : "");
+  }
+
+  function renderCarrierWave(container, bits, kind) {
+    var title = kind === "ook" ? "OOK" : kind === "fsk" ? "2FSK" : "2PSK";
+    container.appendChild(el("p", { className: "waveform-sequence", text: title + " 序列：" + bits.split("").join(" ") }));
+    container.appendChild(drawCarrierWave(bits, kind));
+  }
+
+  function renderLineCode(container, bits, question) {
+    var levels = bits.split("").map(function (bit) {
+      return bit === "1" ? 1 : -1;
+    });
+    container.appendChild(el("p", { className: "waveform-sequence", text: "双极性NRZ：" + levels.map(function (level) {
+      return level > 0 ? "+1" : "-1";
+    }).join(" ") }));
+    container.appendChild(drawLevelWave(levels, bits, levels.map(function () {
+      return "";
+    })));
+  }
+
+  function drawBaseSvg(bits, height) {
+    var bitWidth = 42;
+    var width = Math.max(1, bits.length) * bitWidth;
+    var svg = svgEl("svg", {
+      viewBox: "0 0 " + width + " " + height,
+      width: "100%",
+      style: "height:auto;max-width:100%;display:block;",
+      role: "img",
+      "aria-label": "简化波形图"
+    });
+    svg.appendChild(svgEl("line", {
+      x1: "0",
+      y1: String(height / 2),
+      x2: String(width),
+      y2: String(height / 2),
+      stroke: "#98a2b3",
+      "stroke-width": "1"
+    }));
+    bits.split("").forEach(function (bit, index) {
+      var x = index * bitWidth;
+      svg.appendChild(svgEl("line", {
+        x1: String(x),
+        y1: "22",
+        x2: String(x),
+        y2: String(height - 14),
+        stroke: "#d0d5dd",
+        "stroke-width": "1",
+        "stroke-dasharray": "4 4"
+      }));
+      svg.appendChild(svgEl("text", {
+        x: String(x + bitWidth / 2),
+        y: "14",
+        "text-anchor": "middle",
+        "font-size": "11",
+        fill: "#344054"
+      }, [document.createTextNode(bit)]));
+    });
+    svg.appendChild(svgEl("line", {
+      x1: String(width),
+      y1: "22",
+      x2: String(width),
+      y2: String(height - 14),
+      stroke: "#d0d5dd",
+      "stroke-width": "1",
+      "stroke-dasharray": "4 4"
+    }));
+    return { svg: svg, bitWidth: bitWidth, width: width, height: height };
+  }
+
+  function drawCarrierWave(bits, kind) {
+    var base = drawBaseSvg(bits, 112);
+    var path = [];
+    bits.split("").forEach(function (bit, index) {
+      var x0 = index * base.bitWidth;
+      var cycles = kind === "fsk" ? (bit === "1" ? 4 : 2) : 3;
+      var active = kind === "ook" ? bit === "1" : true;
+      var phase = kind === "psk" && bit === "1" ? Math.PI : 0;
+      for (var step = 0; step <= 24; step += 1) {
+        var x = x0 + step / 24 * base.bitWidth;
+        var y = base.height / 2;
+        if (active) {
+          y += Math.sin(step / 24 * Math.PI * 2 * cycles + phase) * 24;
+        }
+        path.push((path.length ? "L" : "M") + round(x) + " " + round(y));
+      }
+    });
+    base.svg.appendChild(svgEl("path", {
+      d: path.join(" "),
+      fill: "none",
+      stroke: "#0f766e",
+      "stroke-width": "2"
+    }));
+    return base.svg;
+  }
+
+  function drawLevelWave(levels, bits, marks) {
+    var base = drawBaseSvg(bits, 118);
+    var high = 38;
+    var mid = base.height / 2;
+    var low = 84;
+    var path = [];
+    var previousY = mid;
+    levels.forEach(function (level, index) {
+      var x0 = index * base.bitWidth;
+      var x1 = x0 + base.bitWidth;
+      var y = level > 0 ? high : level < 0 ? low : mid;
+      if (!path.length) {
+        path.push("M" + x0 + " " + y);
+      } else {
+        path.push("L" + x0 + " " + previousY);
+        path.push("L" + x0 + " " + y);
+      }
+      path.push("L" + x1 + " " + y);
+      previousY = y;
+      if (marks[index]) {
+        base.svg.appendChild(svgEl("text", {
+          x: String(x0 + base.bitWidth / 2),
+          y: String(y - 7),
+          "text-anchor": "middle",
+          "font-size": "10",
+          fill: "#b42318",
+          "font-weight": "700"
+        }, [document.createTextNode(marks[index])]));
+      }
+    });
+    base.svg.appendChild(svgEl("path", {
+      d: path.join(" "),
+      fill: "none",
+      stroke: "#0f766e",
+      "stroke-width": "2"
+    }));
+    return base.svg;
+  }
+
+  function round(value) {
+    return Math.round(value * 10) / 10;
+  }
+
+  CP.waveform = {
+    render: render,
+    _test: {
+      extractBits: extractBits,
+      detectKind: detectKind,
+      hdb3Encode: hdb3Encode,
+      formatHdb3Token: formatHdb3Token
+    }
+  };
+})(window, document);
+
+</script>
+  <script>
+/*
+ * 职责：UI交互层；渲染首页/逐题提交做题页/结果页/考前速背，统一判分并接入 state/engine。
+ * 状态读写：读取 State 的 history/wrongBank/weakBank/tagStats/settings 用于展示；
+ * 查看结果时调用 setPendingResult 仅写内存 pendingResult；三出口调用 commitPendingResult/discardPendingResult。
+ */
+(function (window, document) {
+  var CP = window.CP = window.CP || {};
+  var TYPES = ["single", "multiple", "judge", "blank", "calculation", "waveform"];
+  var DEFAULT_CONFIG = { single: 8, multiple: 5, judge: 8, blank: 5, calculation: 2, waveform: 1 };
+  var TYPE_LABELS = {
+    single: "单选",
+    multiple: "多选",
+    judge: "判断",
+    blank: "填空",
+    calculation: "计算",
+    waveform: "波形"
+  };
+  var MODE_LABELS = {
+    comprehensive: "综合模拟卷",
+    theory: "理论速刷",
+    calculation: "计算大题",
+    waveform: "波形码型专项",
+    homework: "按作业练习",
+    drill: "重练卷",
+    bank: "弱项练习"
+  };
+
+  var currentPaper = null;
+  var currentMode = "comprehensive";
+  var currentConfig = clone(DEFAULT_CONFIG);
+  var currentAnswers = {};
+  var resultRows = [];
+  var routeTo = function (view) {
+    window.location.hash = view;
+  };
+
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function byId(id) {
+    return document.getElementById(id);
+  }
+
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (key) {
+      if (key === "className") {
+        node.className = attrs[key];
+      } else if (key === "text") {
+        node.textContent = attrs[key];
+      } else {
+        node.setAttribute(key, attrs[key]);
+      }
+    });
+    (children || []).forEach(function (child) {
+      node.appendChild(typeof child === "string" ? document.createTextNode(child) : child);
+    });
+    return node;
+  }
+
+  function clear(node) {
+    while (node && node.firstChild) {
+      node.removeChild(node.firstChild);
+    }
+  }
+
+  function normalizeText(value) {
+    return String(value === undefined || value === null ? "" : value).trim();
+  }
+
+  function questionMap() {
+    var map = {};
+    (CP.questions || []).forEach(function (question) {
+      map[question.id] = question;
+    });
+    return map;
+  }
+
+  function sortedKeys(values) {
+    return (Array.isArray(values) ? values : []).map(String).sort();
+  }
+
+  function sameSet(a, b) {
+    var left = sortedKeys(a);
+    var right = sortedKeys(b);
+    return left.length === right.length && left.every(function (value, index) {
+      return value === right[index];
+    });
+  }
+
+  function blankGroups(answer) {
+    if (Array.isArray(answer) && answer.length && Array.isArray(answer[0])) {
+      return answer;
+    }
+    return [Array.isArray(answer) ? answer : [answer]];
+  }
+
+  function answerToText(answer) {
+    if (answer && typeof answer === "object" && !Array.isArray(answer)) {
+      return answer.final || JSON.stringify(answer);
+    }
+    if (Array.isArray(answer)) {
+      if (answer.length && Array.isArray(answer[0])) {
+        return answer.map(function (group) {
+          return group.join(" / ");
+        }).join("；");
+      }
+      return answer.join(" / ");
+    }
+    if (typeof answer === "boolean") {
+      return answer ? "对" : "错";
+    }
+    return String(answer);
+  }
+
+  function userAnswerToText(question, answer) {
+    if (question.type === "judge") {
+      return answer === true ? "对" : answer === false ? "错" : "未作答";
+    }
+    if (Array.isArray(answer)) {
+      return answer.map(function (item) {
+        return normalizeText(item);
+      }).filter(Boolean).join("；") || "未作答";
+    }
+    return normalizeText(answer) || "未作答";
+  }
+
+  function scoreAnswer(question, userAnswer, selfCorrect) {
+    if (question.type === "single") {
+      return String(userAnswer || "") === String(question.answer);
+    }
+    if (question.type === "multiple") {
+      return sameSet(userAnswer, question.answer);
+    }
+    if (question.type === "judge") {
+      return userAnswer === question.answer;
+    }
+    return selfCorrect === true;
+  }
+
+  function getBlankCount(question) {
+    var count = (question.question.match(/____/g) || []).length;
+    return count || blankGroups(question.answer).length;
+  }
+
+  function getTagLabel(tag) {
+    return (CP.tags && CP.tags[tag]) || tag;
+  }
+
+  function getAnswer(question) {
+    if (!currentAnswers[question.id]) {
+      currentAnswers[question.id] = {
+        userAnswer: question.type === "multiple" || question.type === "blank" ? [] : null,
+        submitted: false,
+        correct: false,
+        markedWeak: false,
+        selfEvaluated: question.type !== "blank" && question.type !== "calculation" && question.type !== "waveform"
+      };
+    }
+    return currentAnswers[question.id];
+  }
+
+  function isSubjective(question) {
+    return question.type === "blank" || question.type === "calculation" || question.type === "waveform";
+  }
+
+  function isCorrectOption(question, optionKey) {
+    if (question.type === "multiple") {
+      return Array.isArray(question.answer) && question.answer.indexOf(optionKey) >= 0;
+    }
+    if (question.type === "judge") {
+      return String(question.answer) === optionKey;
+    }
+    return String(question.answer) === optionKey;
+  }
+
+  function isSelectedOption(question, answer, optionKey) {
+    if (question.type === "multiple") {
+      return Array.isArray(answer.userAnswer) && answer.userAnswer.indexOf(optionKey) >= 0;
+    }
+    if (question.type === "judge") {
+      return answer.userAnswer !== null && String(answer.userAnswer) === optionKey;
+    }
+    return answer.userAnswer === optionKey;
+  }
+
+  function configFromForm(root) {
+    var config = {};
+    TYPES.forEach(function (type) {
+      var input = root.querySelector('[data-config-type="' + type + '"]');
+      var value = Number(input && input.value);
+      config[type] = Number.isFinite(value) && value >= 0 ? Math.floor(value) : DEFAULT_CONFIG[type];
+    });
+    return config;
+  }
+
+  function renderConfigControls() {
+    return el("div", { className: "config-grid" }, TYPES.map(function (type) {
+      return el("label", { className: "field-label" }, [
+        el("span", { text: TYPE_LABELS[type] }),
+        el("input", {
+          className: "field-input",
+          type: "number",
+          min: "0",
+          step: "1",
+          value: String(DEFAULT_CONFIG[type]),
+          "data-config-type": type
+        })
+      ]);
+    }));
+  }
+
+  function startPaper(mode, config, paper) {
+    currentMode = mode || "comprehensive";
+    currentConfig = clone(config || DEFAULT_CONFIG);
+    currentPaper = paper || CP.engine.buildPaper(currentConfig, { mode: currentMode });
+    currentAnswers = {};
+    resultRows = [];
+    routeTo("practice");
+  }
+
+  function startComprehensive() {
+    startPaper("comprehensive", currentConfig, CP.engine.buildPaper(currentConfig, { mode: "comprehensive" }));
+  }
+
+  function renderHome() {
+    var root = byId("view-home");
+    clear(root);
+    var state = CP.state.getState();
+    var homeworkPanel = el("section", { className: "panel" }, [
+      el("h1", { text: "通信原理综合练习" }),
+      el("h2", { text: "按作业练习" }),
+      el("p", { text: "选择作业后生成该次作业的全部原题，照常逐题提交、星标和入库。" }),
+      renderHomeworkButtons()
+    ]);
+    var panel = el("section", { className: "panel" }, [
+      el("h2", { text: "综合训练" }),
+      el("p", { text: "选择模式后生成离线试卷；查看结果只生成 pendingResult，底部出口按钮才会写入本地记录。" })
+    ]);
+    var configBox = renderConfigControls();
+    panel.appendChild(configBox);
+    panel.appendChild(el("div", { className: "mode-grid" }, [
+      modeButton("comprehensive", configBox),
+      modeButton("theory", configBox),
+      modeButton("calculation", configBox),
+      modeButton("waveform", configBox)
+    ]));
+    root.appendChild(homeworkPanel);
+    root.appendChild(panel);
+    root.appendChild(renderMistakeEntry(state));
+    root.appendChild(renderStateTools(state));
+  }
+
+  function renderMistakeEntry(state) {
+    var panel = el("section", { className: "panel" }, [
+      el("h2", { text: "错题与不熟题" }),
+      el("p", {
+        text: "查看历史错题（" + state.wrongBank.length + " 题）与不熟题（" +
+          state.weakBank.length + " 题），并直接练习这些原题。"
+      })
+    ]);
+    var button = el("button", { type: "button", text: "进入错题与不熟题" });
+    button.addEventListener("click", function () {
+      routeTo("mistake");
+    });
+    panel.appendChild(el("div", { className: "mode-grid" }, [button]));
+    return panel;
+  }
+
+  function renderHomeworkButtons() {
+    return el("div", { className: "mode-grid" }, [1, 2, 3, 4, 5].map(function (index) {
+      var sourceGroup = "作业" + index;
+      var button = el("button", { type: "button", text: sourceGroup });
+      button.addEventListener("click", function () {
+        startPaper("homework", currentConfig, CP.engine.buildHomeworkPaper(sourceGroup));
+      });
+      return button;
+    }));
+  }
+
+  function modeButton(mode, configBox) {
+    var button = el("button", { type: "button", text: MODE_LABELS[mode] });
+    button.addEventListener("click", function () {
+      startPaper(mode, configFromForm(configBox));
+    });
+    return button;
+  }
+
+  function renderStateTools(state) {
+    var panel = el("section", { className: "panel state-panel" }, [
+      el("h2", { text: "数据区" }),
+      el("p", {
+        className: "muted",
+        text: "历史记录 " + state.history.length + " 条 / 错题 " + state.wrongBank.length +
+          " 个 / 不熟题 " + state.weakBank.length + " 个 / 标签 " + Object.keys(state.tagStats).length + " 个"
+      })
+    ]);
+    var textarea = el("textarea", { className: "json-textarea", rows: "8", spellcheck: "false" });
+    panel.appendChild(el("div", { className: "action-grid" }, [
+      dataButton("导出 JSON", function () {
+        textarea.value = CP.state.exportJSON();
+      }),
+      dataButton("导入 JSON", function () {
+        CP.state.importJSON(textarea.value);
+        renderHome();
+      }, "secondary"),
+      dataButton("清空记录", function () {
+        CP.state.reset();
+        textarea.value = CP.state.exportJSON();
+        renderHome();
+      }, "danger")
+    ]));
+    panel.appendChild(el("label", { className: "field-label field-label--wide" }, [
+      el("span", { text: "JSON" }),
+      textarea
+    ]));
+    return panel;
+  }
+
+  function dataButton(text, onClick, className) {
+    var button = el("button", { type: "button", text: text, className: className || "" });
+    button.addEventListener("click", function () {
+      try {
+        onClick();
+      } catch (error) {
+        window.alert("操作失败：" + error.message);
+      }
+    });
+    return button;
+  }
+
+  function ensurePaper() {
+    if (!currentPaper) {
+      currentPaper = CP.engine.buildPaper(DEFAULT_CONFIG, { mode: "comprehensive" });
+      currentMode = "comprehensive";
+      currentConfig = clone(DEFAULT_CONFIG);
+      currentAnswers = {};
+    }
+  }
+
+  function renderPractice() {
+    var root = byId("view-practice");
+    clear(root);
+    ensurePaper();
+    root.appendChild(el("section", { className: "panel practice-head" }, [
+      el("h1", { text: practiceTitle() }),
+      el("p", { className: "muted", text: "共 " + currentPaper.items.length + " 题。每题独立提交，提交后锁定并即时显示答案与讲解。" })
+    ]));
+    currentPaper.items.forEach(function (question, index) {
+      root.appendChild(renderQuestion(question, index));
+    });
+    root.appendChild(renderPaperFooter());
+  }
+
+  function practiceTitle() {
+    if (currentMode === "homework" && currentPaper && currentPaper.meta && currentPaper.meta.sourceGroup) {
+      return currentPaper.meta.sourceGroup + " 练习";
+    }
+    return MODE_LABELS[currentMode] || "做题";
+  }
+
+  function renderQuestion(question, index) {
+    var answer = getAnswer(question);
+    var cardClass = "panel question-card" + (answer.submitted ? " is-submitted" : "");
+    var panel = el("section", { className: cardClass, "data-qid": question.id }, [
+      el("div", { className: "question-title-row" }, [
+        renderStar(question, answer),
+        el("div", { className: "question-title" }, [
+          el("h2", { text: (index + 1) + ". [" + TYPE_LABELS[question.type] + "] " + getTagLabel(question.knowledgeTag) }),
+          el("p", { text: question.question })
+        ])
+      ])
+    ]);
+    panel.appendChild(renderAnswerControl(question, answer));
+    if (!answer.submitted) {
+      panel.appendChild(el("div", { className: "question-actions" }, [
+        submitQuestionButton(question, answer)
+      ]));
+    } else {
+      panel.appendChild(renderFeedback(question, answer));
+    }
+    return panel;
+  }
+
+  function renderStar(question, answer) {
+    var button = el("button", {
+      type: "button",
+      className: "star-button" + (answer.markedWeak ? " is-active" : ""),
+      "aria-label": answer.markedWeak ? "取消拿不准标记" : "标记拿不准",
+      text: "★"
+    });
+    if (!answer.submitted) {
+      button.disabled = true;
+      button.title = "提交本题后可标记拿不准";
+    }
+    button.addEventListener("click", function () {
+      if (!answer.submitted) {
+        return;
+      }
+      answer.markedWeak = !answer.markedWeak;
+      renderPractice();
+    });
+    return button;
+  }
+
+  function renderAnswerControl(question, answer) {
+    var wrap = el("div", { className: "answer-area" });
+    if (question.type === "single" || question.type === "judge") {
+      var options = question.type === "judge"
+        ? [{ key: "true", text: "对" }, { key: "false", text: "错" }]
+        : question.options;
+      options.forEach(function (option) {
+        wrap.appendChild(renderOptionItem(question, answer, option, "radio"));
+      });
+    } else if (question.type === "multiple") {
+      answer.userAnswer = answer.userAnswer || [];
+      question.options.forEach(function (option) {
+        wrap.appendChild(renderOptionItem(question, answer, option, "checkbox"));
+      });
+    } else if (question.type === "blank") {
+      answer.userAnswer = answer.userAnswer || [];
+      for (var i = 0; i < getBlankCount(question); i += 1) {
+        wrap.appendChild(renderBlankInput(question, answer, i));
+      }
+    } else {
+      wrap.appendChild(renderTextArea(question, answer));
+      if (question.type === "waveform") {
+        var placeholder = el("div", { className: "waveform-placeholder", text: "波形绘制将在 E 阶段接入，这里先保留题干与作答区。" });
+        wrap.appendChild(placeholder);
+        if (CP.waveform && typeof CP.waveform.render === "function") {
+          CP.waveform.render(placeholder, question);
+        }
+      }
+    }
+    return wrap;
+  }
+
+  function renderOptionItem(question, answer, option, inputType) {
+    var selected = isSelectedOption(question, answer, option.key);
+    var correct = isCorrectOption(question, option.key);
+    var className = "option-item";
+    if (answer.submitted && correct) {
+      className += " correct";
+    }
+    if (answer.submitted && selected && !correct) {
+      className += " wrong";
+    }
+    if (answer.submitted) {
+      className += " locked";
+    }
+    var label = el("label", { className: className });
+    var input = el("input", {
+      type: inputType,
+      name: "answer-" + question.id,
+      value: option.key
+    });
+    input.checked = selected;
+    input.disabled = answer.submitted;
+    input.addEventListener("change", function () {
+      if (answer.submitted) {
+        return;
+      }
+      if (question.type === "judge") {
+        answer.userAnswer = option.key === "true";
+      } else if (question.type === "multiple") {
+        var selectedKeys = answer.userAnswer || [];
+        if (input.checked && selectedKeys.indexOf(option.key) === -1) {
+          selectedKeys.push(option.key);
+        }
+        if (!input.checked) {
+          selectedKeys = selectedKeys.filter(function (key) {
+            return key !== option.key;
+          });
+        }
+        answer.userAnswer = selectedKeys;
+      } else {
+        answer.userAnswer = option.key;
+      }
+    });
+    label.appendChild(input);
+    label.appendChild(el("span", { className: "option-key", text: option.key.length === 1 ? option.key : "" }));
+    label.appendChild(el("span", { className: "option-text", text: option.key.length === 1 ? option.text : option.text }));
+    return label;
+  }
+
+  function renderBlankInput(question, answer, index) {
+    var input = el("input", {
+      className: "field-input",
+      type: "text",
+      placeholder: "第 " + (index + 1) + " 空"
+    });
+    input.value = answer.userAnswer[index] || "";
+    input.disabled = answer.submitted;
+    input.addEventListener("input", function () {
+      answer.userAnswer[index] = input.value;
+    });
+    return input;
+  }
+
+  function renderTextArea(question, answer) {
+    var textarea = el("textarea", { className: "answer-textarea", rows: "4", placeholder: "写下你的解答或波形描述" });
+    textarea.value = answer.userAnswer || "";
+    textarea.disabled = answer.submitted;
+    textarea.addEventListener("input", function () {
+      answer.userAnswer = textarea.value;
+    });
+    return textarea;
+  }
+
+  function submitQuestionButton(question, answer) {
+    var button = el("button", { type: "button", text: "提交本题" });
+    button.addEventListener("click", function () {
+      if (!hasAnyAnswer(question, answer)) {
+        window.alert("请先作答。");
+        return;
+      }
+      answer.submitted = true;
+      if (isSubjective(question)) {
+        answer.correct = false;
+        answer.selfEvaluated = false;
+      } else {
+        answer.correct = scoreAnswer(question, answer.userAnswer);
+        answer.selfEvaluated = true;
+      }
+      renderPractice();
+    });
+    return button;
+  }
+
+  function hasAnyAnswer(question, answer) {
+    if (question.type === "multiple") {
+      return Array.isArray(answer.userAnswer) && answer.userAnswer.length > 0;
+    }
+    if (question.type === "blank") {
+      return Array.isArray(answer.userAnswer) && answer.userAnswer.some(function (value) {
+        return normalizeText(value);
+      });
+    }
+    if (question.type === "calculation" || question.type === "waveform") {
+      return !!normalizeText(answer.userAnswer);
+    }
+    return answer.userAnswer !== null && answer.userAnswer !== undefined && answer.userAnswer !== "";
+  }
+
+  function renderFeedback(question, answer) {
+    var feedbackClass = "feedback " + (answer.correct ? "good" : "bad");
+    var feedback = el("div", { className: feedbackClass }, [
+      el("p", { className: "answer-line", text: feedbackStatusText(question, answer) + " · 正确答案：" + answerToText(question.answer) }),
+      el("p", { className: "explanation", text: "讲解：" + question.explanation }),
+      el("p", { className: "muted", text: "考点：" + getTagLabel(question.knowledgeTag) })
+    ]);
+    if (isSubjective(question) && !answer.selfEvaluated) {
+      feedback.appendChild(el("div", { className: "question-actions" }, [
+        selfEvalButton(question, answer, true),
+        selfEvalButton(question, answer, false)
+      ]));
+    }
+    return feedback;
+  }
+
+  function feedbackStatusText(question, answer) {
+    if (isSubjective(question) && !answer.selfEvaluated) {
+      return "请自评";
+    }
+    return answer.correct ? "回答正确" : "回答错误";
+  }
+
+  function selfEvalButton(question, answer, correct) {
+    var button = el("button", { type: "button", text: correct ? "我对了" : "我错了", className: correct ? "" : "danger" });
+    button.addEventListener("click", function () {
+      answer.correct = correct;
+      answer.selfEvaluated = true;
+      renderPractice();
+    });
+    return button;
+  }
+
+  function renderPaperFooter() {
+    var ready = isPaperReady();
+    var status = ready ? "全部题目已完成，可查看结果。" : "请逐题提交；主观题需完成自评后才能查看结果。";
+    var button = el("button", { type: "button", text: "查看结果" });
+    button.disabled = !ready;
+    button.addEventListener("click", function () {
+      if (!isPaperReady()) {
+        return;
+      }
+      buildPendingFromSubmitted();
+      routeTo("result");
+    });
+    return el("section", { className: "panel paper-footer" }, [
+      el("p", { className: "muted", text: status }),
+      button
+    ]);
+  }
+
+  function isPaperReady() {
+    return currentPaper && currentPaper.items.every(function (question) {
+      var answer = getAnswer(question);
+      return answer.submitted && (!isSubjective(question) || answer.selfEvaluated);
+    });
+  }
+
+  function buildPendingFromSubmitted() {
+    var rows = currentPaper.items.map(function (question) {
+      var answer = getAnswer(question);
+      return {
+        question: question,
+        qid: question.id,
+        userAnswer: answer.userAnswer === undefined ? null : answer.userAnswer,
+        correct: answer.correct === true,
+        confidence: "sure",
+        markedWeak: answer.markedWeak === true,
+        tags: [question.knowledgeTag],
+        subjective: isSubjective(question)
+      };
+    });
+    resultRows = rows;
+    syncPending(new Date().toISOString());
+  }
+
+  function syncPending(date) {
+    var items = resultRows.map(function (row) {
+      return {
+        qid: row.qid,
+        userAnswer: row.userAnswer,
+        correct: row.correct,
+        confidence: "sure",
+        markedWeak: row.markedWeak === true,
+        tags: row.tags
+      };
+    });
+    var correctCount = items.filter(function (item) {
+      return item.correct;
+    }).length;
+    CP.state.setPendingResult({
+      paperId: currentPaper.paperId,
+      date: date || new Date().toISOString(),
+      score: items.length ? Math.round(correctCount / items.length * 100) : 0,
+      items: items
+    });
+  }
+
+  function renderResult() {
+    var root = byId("view-result");
+    clear(root);
+    var pending = CP.state.getPendingResult();
+    if (!pending) {
+      root.appendChild(el("section", { className: "panel" }, [
+        el("h1", { text: "结果" }),
+        el("p", { text: "暂无待提交结果。" })
+      ]));
+      return;
+    }
+    if (!resultRows.length) {
+      rebuildRowsFromPending(pending);
+    }
+    var correctCount = resultRows.filter(function (row) { return row.correct; }).length;
+    var wrongCount = resultRows.length - correctCount;
+    var weakCount = resultRows.filter(function (row) {
+      return row.markedWeak;
+    }).length;
+    root.appendChild(el("section", { className: "panel" }, [
+      el("h1", { text: "结果" }),
+      el("p", { text: "正确率 " + (resultRows.length ? Math.round(correctCount / resultRows.length * 100) : 0) +
+          "% / 错题 " + wrongCount + " / 星标题 " + weakCount })
+    ]));
+    resultRows.forEach(function (row, index) {
+      root.appendChild(renderResultRow(row, index));
+    });
+    root.appendChild(renderWeakSummary());
+    root.appendChild(renderResultExits());
+  }
+
+  function rebuildRowsFromPending(pending) {
+    var map = questionMap();
+    resultRows = pending.items.map(function (item) {
+      var question = map[item.qid] || { id: item.qid, question: item.qid, type: "single", answer: "", explanation: "", knowledgeTag: "" };
+      return {
+        question: question,
+        qid: item.qid,
+        userAnswer: item.userAnswer,
+        correct: item.correct,
+        confidence: "sure",
+        markedWeak: item.markedWeak,
+        tags: item.tags || [question.knowledgeTag],
+        subjective: isSubjective(question)
+      };
+    });
+  }
+
+  function renderResultRow(row, index) {
+    var q = row.question;
+    var panel = el("section", { className: "panel result-card" }, [
+      el("h2", { text: (index + 1) + ". " + (row.correct ? "正确" : "错误") + " / " + getTagLabel(q.knowledgeTag) }),
+      el("p", { text: q.question }),
+      el("p", { text: "你的答案：" + userAnswerToText(q, row.userAnswer) }),
+      el("p", { text: "标准答案：" + answerToText(q.answer) }),
+      el("p", { text: "讲解：" + q.explanation })
+    ]);
+    panel.appendChild(el("div", { className: "question-actions" }, [
+      resultButton(row.markedWeak ? "已标星" : "标记为不熟", function () {
+        row.markedWeak = true;
+        syncPending();
+        renderResult();
+      }, "secondary"),
+      resultButton("加入错题库", function () {
+        row.correct = false;
+        syncPending();
+        renderResult();
+      }, "danger")
+    ]));
+    return panel;
+  }
+
+  function resultButton(text, onClick, className) {
+    var button = el("button", { type: "button", text: text, className: className || "" });
+    button.addEventListener("click", onClick);
+    return button;
+  }
+
+  function renderWeakSummary() {
+    var weakTags = CP.engine.getWeakTags().slice(0, 8);
+    var panel = el("section", { className: "panel" }, [
+      el("h2", { text: "薄弱考点" })
+    ]);
+    if (!weakTags.length) {
+      panel.appendChild(el("p", { className: "muted", text: "提交保存后会根据历史记录生成薄弱考点。" }));
+    } else {
+      weakTags.forEach(function (entry) {
+        panel.appendChild(el("p", { text: getTagLabel(entry.tag) + "：薄弱分 " + entry.score }));
+      });
+    }
+    return panel;
+  }
+
+  function renderResultExits() {
+    return el("section", { className: "panel" }, [
+      el("div", { className: "action-grid" }, [
+        resultButton("重做错题/不熟题", function () {
+          CP.state.commitPendingResult();
+          var drill = CP.engine.buildDrillPaper(currentConfig);
+          startPaper("drill", currentConfig, drill);
+        }, "secondary"),
+        resultButton(nextAfterCommitLabel(), function () {
+          CP.state.commitPendingResult();
+          if (currentMode === "homework" || currentMode === "bank") {
+            currentPaper = null;
+            resultRows = [];
+            routeTo("home");
+            return;
+          }
+          startComprehensive();
+        }),
+        resultButton("重新生成一套，不保存本次记录", function () {
+          CP.state.discardPendingResult();
+          startComprehensive();
+        }, "danger")
+      ])
+    ]);
+  }
+
+  function nextAfterCommitLabel() {
+    if (currentMode === "drill") {
+      return "继续";
+    }
+    if (currentMode === "homework" || currentMode === "bank") {
+      return "保存记录，返回首页";
+    }
+    return "加入错题库，进入下一套";
+  }
+
+  function renderReview() {
+    var root = byId("view-review");
+    clear(root);
+    var points = [
+      "信息量：I=-log2(P)；bit/Hartley/nat 是信息量单位，Baud 是码元速率单位。",
+      "码元速率RB=1/Ts；信息速率Rb=RB·log2(M)，2/4/8/16进制分别为1/2/3/4 bit/码元。",
+      "误码率=错码数/总码元数；误信率=错比特数/总比特数。",
+      "2e^-t·u(t)是能量信号；未乘u(t)的2e^-t不是能量信号。",
+      "高斯过程经过线性系统仍为高斯过程；广义平稳均值和方差与时间无关，自相关只与时间间隔有关。",
+      "R(0)表示平均功率，R(∞)表示直流功率。",
+      "恒参信道参数基本稳定，随参信道参数随机变化；加性干扰独立存在，乘性干扰无信号时消失。",
+      "香农公式C=B·log2(1+S/N)，S/N要用线性值；B趋于无穷时容量不必趋于无穷。",
+      "AM调幅系数ma=(Vmax-Vmin)/(Vmax+Vmin)；DSB含上下边带；SSB省功率、省带宽；FDM按频率分割。",
+      "FM：β=Δf/fm，卡森B≈2(Δf+fm)；不知道m(t)时可能无法区分FM/PM。",
+      "NRZ/RZ/AMI/CMI/HDB3：AMI无直流，CMI定时丰富，HDB3用000V或B00V破坏长连0。",
+      "OOK看载波有无，2FSK看频率，2PSK看相位；相干2PSK抗噪最好，2ASK最差且对门限敏感，2FSK频带利用率最低。"
+    ];
+    var panel = el("section", { className: "panel" }, [
+      el("h1", { text: "考前速背" })
+    ]);
+    points.forEach(function (point) {
+      panel.appendChild(el("p", { text: point }));
+    });
+    root.appendChild(panel);
+  }
+
+  function findLastAttempt(state, qid) {
+    var history = Array.isArray(state.history) ? state.history : [];
+    for (var i = history.length - 1; i >= 0; i -= 1) {
+      var items = history[i] && history[i].items ? history[i].items : [];
+      for (var j = 0; j < items.length; j += 1) {
+        if (items[j] && items[j].qid === qid) {
+          return items[j];
+        }
+      }
+    }
+    return null;
+  }
+
+  function renderMistakeCard(state, qid, map) {
+    var q = map[qid];
+    if (!q) {
+      return el("section", { className: "panel result-card" }, [
+        el("p", { className: "muted", text: "题目 " + qid + " 不在当前题库中。" })
+      ]);
+    }
+    var panel = el("section", { className: "panel result-card" }, [
+      el("h2", { text: "[" + (TYPE_LABELS[q.type] || q.type) + "] " + getTagLabel(q.knowledgeTag) }),
+      el("p", { text: q.question }),
+      el("p", { className: "muted", text: "来源：" + (q.sourceGroup || "未知") }),
+      el("p", { text: "正确答案：" + answerToText(q.answer) }),
+      el("p", { text: "讲解：" + q.explanation })
+    ]);
+    var last = findLastAttempt(state, qid);
+    if (last) {
+      panel.appendChild(el("p", {
+        className: "muted",
+        text: "上次我的答案：" + userAnswerToText(q, last.userAnswer) +
+          " / 最近一次" + (last.correct ? "正确" : "错误") +
+          " / 自评：" + (last.confidence || "sure")
+      }));
+    } else {
+      panel.appendChild(el("p", { className: "muted", text: "无历史作答记录。" }));
+    }
+    return panel;
+  }
+
+  function renderBankSection(state, title, ids, emptyText, map) {
+    var panel = el("section", { className: "panel" }, [el("h2", { text: title })]);
+    if (!ids.length) {
+      panel.appendChild(el("p", { className: "muted", text: emptyText }));
+      return panel;
+    }
+    ids.forEach(function (qid) {
+      panel.appendChild(renderMistakeCard(state, qid, map));
+    });
+    return panel;
+  }
+
+  function uniqueIds(list) {
+    var seen = {};
+    var result = [];
+    (Array.isArray(list) ? list : []).forEach(function (id) {
+      if (id !== undefined && id !== null && !seen[id]) {
+        seen[id] = true;
+        result.push(String(id));
+      }
+    });
+    return result;
+  }
+
+  function renderMistake() {
+    var root = byId("view-mistake");
+    clear(root);
+    var state = CP.state.getState();
+    var map = questionMap();
+    var wrongIds = uniqueIds(state.wrongBank);
+    var weakIds = uniqueIds(state.weakBank);
+    var allWeak = uniqueIds(wrongIds.concat(weakIds));
+
+    var head = el("section", { className: "panel" }, [
+      el("h1", { text: "错题与不熟题" }),
+      el("p", { text: "错题 " + wrongIds.length + " 题 / 不熟题 " + weakIds.length + " 题 / 全部弱项 " + allWeak.length + " 题。" })
+    ]);
+    var actions = el("div", { className: "action-grid" }, [
+      bankPracticeButton("只练原错题", "wrong", wrongIds.length),
+      bankPracticeButton("只练不熟题", "weak", weakIds.length),
+      bankPracticeButton("练全部弱项", "allWeak", allWeak.length)
+    ]);
+    var backButton = el("button", { type: "button", text: "返回首页", className: "secondary" });
+    backButton.addEventListener("click", function () {
+      routeTo("home");
+    });
+    actions.appendChild(backButton);
+    head.appendChild(actions);
+    root.appendChild(head);
+
+    root.appendChild(renderBankSection(state, "错题池", wrongIds, "暂无错题", map));
+    root.appendChild(renderBankSection(state, "不熟题池", weakIds, "暂无不熟题", map));
+    root.appendChild(renderBankSection(state, "全部弱项", allWeak, "暂无弱项", map));
+  }
+
+  function bankPracticeButton(text, bankType, count) {
+    var button = el("button", { type: "button", text: text });
+    button.disabled = count === 0;
+    button.addEventListener("click", function () {
+      var paper = CP.engine.buildBankPaper(bankType);
+      if (!paper.items.length) {
+        window.alert("当前没有可练习的题目。");
+        return;
+      }
+      startPaper("bank", currentConfig, paper);
+    });
+    return button;
+  }
+
+  function renderView(view) {
+    if (view === "home") {
+      renderHome();
+    } else if (view === "practice") {
+      renderPractice();
+    } else if (view === "result") {
+      renderResult();
+    } else if (view === "mistake") {
+      renderMistake();
+    } else if (view === "review") {
+      renderReview();
+    }
+  }
+
+  function init(options) {
+    routeTo = options && options.routeTo ? options.routeTo : routeTo;
+  }
+
+  CP.ui = {
+    init: init,
+    renderView: renderView,
+    startPaper: startPaper,
+    scoreAnswer: scoreAnswer
+  };
+})(window, document);
+
+</script>
+  <script>
+/*
+ * 职责：应用装配与极简显隐路由，调用 window.CP.ui 渲染当前视图。
+ * 状态读写：启动时调用 state.load；具体状态读写由 ui.js 通过 state API 完成。
+ */
+(function (window, document) {
+  var CP = window.CP = window.CP || {};
+  var views = ["home", "practice", "result", "mistake", "review"];
+
+  function byId(id) {
+    return document.getElementById(id);
+  }
+
+  function getRoute() {
+    var hash = window.location.hash.replace(/^#\/?/, "");
+    return views.indexOf(hash) >= 0 ? hash : "home";
+  }
+
+  function routeTo(view) {
+    window.location.hash = view;
+  }
+
+  function renderRoute() {
+    var active = getRoute();
+    views.forEach(function (view) {
+      var panel = byId("view-" + view);
+      if (panel) {
+        panel.hidden = view !== active;
+      }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-view-link]"), function (button) {
+      var isActive = button.getAttribute("data-view-link") === active;
+      if (isActive) {
+        button.setAttribute("aria-current", "page");
+      } else {
+        button.removeAttribute("aria-current");
+      }
+    });
+    if (CP.ui && typeof CP.ui.renderView === "function") {
+      CP.ui.renderView(active);
+    }
+  }
+
+  function bindRoutes() {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-view-link], [data-route]"), function (button) {
+      button.addEventListener("click", function () {
+        routeTo(button.getAttribute("data-view-link") || button.getAttribute("data-route"));
+      });
+    });
+    window.addEventListener("hashchange", renderRoute);
+  }
+
+  function init() {
+    CP.state.load();
+    CP.ui.init({ routeTo: routeTo });
+    bindRoutes();
+    if (!window.location.hash) {
+      window.location.hash = "home";
+    }
+    renderRoute();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})(window, document);
+
+</script>
+</body>
+</html>
